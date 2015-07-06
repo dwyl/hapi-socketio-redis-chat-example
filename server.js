@@ -5,7 +5,7 @@
 // where Ww4ULq6wOTUZYD62v3yu is the session ID
 // var redis  = require("redis");
 // var redis_client = redis.createClient();
-var redis_client = require('./redis_connection');
+var redis_client = require('./lib/redis_connection');
 // confirm redis is working as expected:
 redis_client.set("Redis-Status", "Working");
 redis_client.get("Redis-Status", function(err, reply) {
@@ -42,14 +42,14 @@ server.start(function () {
 
       socket.emit('Hello!');
 
-      socket.on('message', function (msg) {
+      socket.on('message', function (msg, etc) {
         var obj = { // store each message as an object
           m: msg,
           t: new Date().getTime(),
           u: socket.client.conn.id
         }
         redis_client.RPUSH("chat", JSON.stringify(obj));
-        console.log(msg);
+        console.log(socket.client.conn.id, msg);
         io.emit('message', msg);
       });
   });
