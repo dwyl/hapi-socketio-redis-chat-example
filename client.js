@@ -14,3 +14,6 @@ socket.on('message', function(msg){
 });
 
 // prompt for person's name before allowing to post
+var name = prompt("What is your name/handle?");
+console.log(name);
+socket.emit('name', name);
