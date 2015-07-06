@@ -14,16 +14,24 @@ server.connection({
 });
 
 server.route({ method: 'GET', path: '/', handler: { file: "index.html" } });
+server.route({ method: 'GET', path: '/socket.io.js',
+  handler: {
+    file: './node_modules/socket.io-client/socket.io.js'
+  }
+});
+
 
 server.start(function () {
 // console.dir(server.listener);
   var io = SocketIO.listen(server.listener);
   io.on('connection', function (socket) {
+    console.log(socket.client.conn.id);
 
       socket.emit('Hello!');
 
-      socket.on('message', function () {
-          socket.emit('received');
+      socket.on('message', function (msg) {
+        console.log(msg);
+        io.emit('message', msg);
       });
   });
 });
