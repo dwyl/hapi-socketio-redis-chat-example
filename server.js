@@ -3,10 +3,11 @@
 // For example, in the chrome debug console you can create a new WebSocket with the following URI
 // 'ws://localhost:8000/socket.io/1/websocket/Ww4ULq6wOTUZYD62v3yu'
 // where Ww4ULq6wOTUZYD62v3yu is the session ID
-var redis  = require("redis");
-var redis_client = redis.createClient();
+// var redis  = require("redis");
+// var redis_client = redis.createClient();
+var redis_client = require('./redis_connection');
 // confirm redis is working as expected:
-redis_client.set("Redis-Status", "Working", redis.print);
+redis_client.set("Redis-Status", "Working");
 redis_client.get("Redis-Status", function(err, reply) {
    console.log('Redis Status: ' + reply);
 });
