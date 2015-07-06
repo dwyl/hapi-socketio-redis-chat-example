@@ -18,10 +18,6 @@ As with *all* our examples we have a suite of tests.
 
 [Real-Time](https://en.wikipedia.org/wiki/Real-time_computing#Near_real-time) Chat is an _integral_ part of _any_ communications system. Building a (*basic*) chat system is *easy* with Socket.io.
 
-### Why Redis?
-
-Socket.io only handles distributing messages, if people disconnect from the chat they will miss any subsequent messages and when they re-connect there will be no history ... so we need a place to store messages where we can load all previous messages when someone logs in.
-
 
 ## How?
 
@@ -30,6 +26,18 @@ We are using the following components to build our chat app:
 1. **Hapi.js** (node.js web framework) - If you haven't used Hapi.js before, checkout our introductory tutorial: https://github.com/nelsonic/learn-hapi
 + **Socket.io** (WebSockets with fallback for older clients) - If you're new to Soecket.io see: http://socket.io/get-started/chat/
 + **Redis** (high performance message storage and publish/subscribe) - If you or anyone on your team are *completely* new to Redis, check out: https://github.com/dwyl/learn-redis
+
+### Why Redis?
+
+Socket.io only handles distributing messages, if people disconnect from the chat they will miss any subsequent messages and when anyone connects there will see no history ... so we need a place to store messages for retrieval.
+
+Top 3 reasons why Redis is the *clear* choice for storing chat messages.
+
+1. ***Speed***  - *much faster than MongoDB, CouchDB or PostgreSQL*
+2. ***Simple*** - pushing messages onto a list (set) is the _simplest
+possible_ way to store a chat history.
+3. ***Scalable*** ***Publish/Subscribe***
+
 
 ### Mobile First
 

@@ -1,4 +1,5 @@
 var socket = io(); // initialise socket.io connection
+
 $('form').submit(function() {
   var msg = $('#m').val()
   socket.emit('message', msg);
@@ -11,3 +12,5 @@ $('form').submit(function() {
 socket.on('message', function(msg){
   $('#messages').append($('<li>').text(msg));  // append to list
 });
+
+// prompt for person's name before allowing to post
