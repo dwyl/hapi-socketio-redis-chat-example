@@ -48,6 +48,7 @@
     "nocov": "node ./test/*.js",
     "test": "istanbul cover ./test/*.js",
     "coverage": "istanbul check-coverage --statements 100 --functions 100 --lines 100 --branches 100",
+    "open-coverage":"open ./coverage/lcov-report/index.html",
     "jshint": "jshint -c .jshintrc --exclude-path .gitignore .",
     "codeclimate": "CODECLIMATE_REPO_TOKEN=9825169f8f3a0bdf7351a71da9474c212e819bf0ea6fed60b57be83ff53e9459 ./node_modules/codeclimate-test-reporter/bin/codeclimate.js < ./coverage/lcov.info",
     "docs": "./node_modules/jsdoc/jsdoc.js change.js"

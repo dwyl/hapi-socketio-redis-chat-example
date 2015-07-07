@@ -9,6 +9,7 @@ function getName() {
   }
   console.log('name: ', name);
   socket.emit('name', name);
+  $( "#m" ).focus(); // focus cursor on the message input
   return name;
 }
 
@@ -26,8 +27,8 @@ function getTime(timestamp) {
 }
 
 /**
- * 
- *
+ * renders messages to the DOM
+ * nothing fancy
  */
 function renderMessage(msg) {
   msg = JSON.parse(msg);
