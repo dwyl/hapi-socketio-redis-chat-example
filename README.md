@@ -2,6 +2,8 @@
 
 A basic chat application built with Hapi.js Socket.io and Redis Pub/Sub
 
+> Try it: https://hapi-chat.herokuapp.com/
+
 ## Why
 
 Node.js Chat Apps are practically the "Hello World" of real-time apps.

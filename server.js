@@ -22,11 +22,8 @@ server.route([
       file: './node_modules/socket.io-client/socket.io.js'
     }
   },
-  { method: 'GET', path: '/client.js',
-  handler: {
-      file: './client.js'
-    }
-  },
+  { method: 'GET', path: '/client.js', handler: { file: './client.js' } },
+  { method: 'GET', path: '/style.css', handler: { file: './style.css' } },
   { method: 'GET', path: '/load', handler: loadMessages }
 ]);
 
@@ -34,7 +31,7 @@ server.start(function () {
 // console.dir(server.listener);
   var io = SocketIO.listen(server.listener);
   io.on('connection', function (socket) {
-    console.log(socket.client.conn.id);
+    // console.log(socket.client.conn.id);
 
       socket.emit('Hello!');
 
@@ -50,7 +47,7 @@ server.start(function () {
             if (err) {
               console.log(err);
             }
-            console.log(name);
+            // console.log(name);
             var obj = { // store each message as an object
               m: msg,
               t: new Date().getTime(),
@@ -58,7 +55,7 @@ server.start(function () {
             }
             var str = JSON.stringify(obj)
             redisClient.RPUSH("chat", str);
-            console.log(str);
+            // console.log(str);
             io.emit('message', str);
         })
       });

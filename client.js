@@ -25,6 +25,22 @@ function getTime(timestamp) {
   return '' + h  + ':' + m + ':' + s;
 }
 
+/**
+ * 
+ *
+ */
+function renderMessage(msg) {
+  msg = JSON.parse(msg);
+  console.log(msg);
+  var html = "<li class='row'>";
+  html += "<small class='time'>" + getTime(msg.t)  + " </small>";
+  html += "<span class='name'>" + msg.n + ": </span>";
+  html += "<span class='msg'>"  + msg.m + "</span>";
+  html += "</li>";
+  $('#messages').append(html);  // append to list
+  return;
+}
+
 
 $('form').submit(function() {
   if(!Cookies.get('name') || Cookies.get('name').length < 1 || Cookies.get('name') === null) {
@@ -38,18 +54,6 @@ $('form').submit(function() {
     return false;
   }
 });
-
-function renderMessage(msg) {
-  msg = JSON.parse(msg);
-  console.log(msg);
-  var html = "<li class='row'>";
-  html += "<small class='time'>" + getTime(msg.t)  + " </small>";
-  html += "<span class='name'>" + msg.n + ": </span>";
-  html += "<span class='msg'>"  + msg.m + "</span>";
-  html += "</li>";
-  $('#messages').append(html);  // append to list
-  return;
-}
 
 socket.on('message', function(msg) {
   renderMessage(msg);
