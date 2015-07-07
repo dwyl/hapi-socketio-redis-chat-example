@@ -5,6 +5,7 @@ A basic chat application built with Hapi.js Socket.io and Redis Pub/Sub
 > Try it: https://hapi-chat.herokuapp.com/
 
 ![hapi-chat-demo](https://cdn.rawgit.com/nelsonic/nelsonic.github.io/master/img/hapi-chat-full-res.gif)
+(_click on the image for full-screen version - this mini one looks pixelated ...!_)
 
 ## Why
 
@@ -20,7 +21,12 @@ As with *all* our examples we have a suite of tests.
 
 ## What?
 
-[Real-Time](https://en.wikipedia.org/wiki/Real-time_computing#Near_real-time) Chat is an _integral_ part of _any_ communications system. Building a (*basic*) chat system is *easy* with Socket.io.
+[Real-Time](https://en.wikipedia.org/wiki/Real-time_computing#Near_real-time) Chat is an _integral_ part of _any_ communications system.  
+Building a (*basic*) chat system is *easy* with Socket.io.
+
+This example app shows you how to use Socket.io with Hapi.js and Redis for
+a [***Horizontally Scalable***](http://stackoverflow.com/questions/11707879/difference-between-scaling-horizontally-and-vertically-for-databases) chat capable of
+**_hundrededs of thousands_** of **_concurrent_ clients**.
 
 
 ## How?
@@ -37,27 +43,60 @@ Socket.io only handles distributing messages, if people disconnect from the chat
 
 Top 3 reasons why Redis is the *clear* choice for storing chat messages.
 
-1. ***Speed***  - *much faster than MongoDB, CouchDB or PostgreSQL*
+1. ***Speed***  - **Redis** is _**much faster** than MongoDB, CouchDB or PostgreSQL_
 2. ***Simple*** - pushing messages onto a list (set) is the _simplest
-possible_ way to store a chat history.
-3. ***Scalable*** ***Publish/Subscribe***
+possible_ way to store a chat history. Given that we can store up to **512Mb** *per chat* and *stream* chat *history* to new clients (*low http overhead*) its an
+*incredibly simple setup*!
+3. ***Scalable*** ***Publish/Subscribe*** ("_architecture_") means you can scale *out*
+(*add more node.js/socket.io servers when you need to serve more clients*)
+Redis can already handle an ***order of magnitude*** more than other NoSQL Databases,
+so your most likely "bottleneck" is node (*nuts, hey!?*)
 
 
 ### Mobile First
 
 Given the simplicity of the UI, the chat app is mobile-first by default.
+> _If anyone has time to Pull-Request a few media queries to make it **even better** on mobile, we would massively appreciate the contribution_!
 
 ### Returning Visitor
 
+We use cookies to store the person's name on the client.
+This is sent to the server when the open the chat so they are "logged on" to that server.
+
 ####  How Many Recent Messages Should we Cache?
 
+At present we are caching ***all the messages*** in Redis.
+But a less RAM-hungry way to scale the app would be to store only the 50-100 most recent chat messages in Redis (RAM) and the remaining history in a cheaper on-disk storage e.g. ElasticSearch (_which would also enable searchability_)
 
 ### Data Model
 
+Data Model we have used is incredibly simple.
+It translates to an array of objects:
 
-
+```js
+var chat =  [
+  '{"m":"Hi everyone!","t":1436263590869,"n":"Steve"}',
+    '{"m":"Hi Steve! Welcome to Hapi Chat!","t":1436263599489,"n":"Foxy"}',
+    '{"m":"Hapi Chat lets you chat with your friends!","t":1436263613141,"n":"Oprah"}',
+    '{"m":"Cool! How does it scale?","t":1436263620853,"n":"Steve"}',
+    '{"m":"Funny you should ask! It scales nicely because it uses Hapi.js and Redis!","t":1436263639989,"n":"Chroma"}',
+    '{"m":"Sweet! ","t":1436263645610,"n":"Steve"}',
+    '{"m":"Hello","t":1436264664835,"n":"Timmy"}',
+    '{"m":"Hi!","t":1436267152379,"n":"Timmy"}',
+    '{"m":"lkjlkjlk","t":1436270948402,"n":"dd"}',
+    '{"m":"Big fan of the little notifications at the top when a person joins","t":1436273109909,"n":"iteles"}'
+]
+```
+We use:
++ **m** for the key of the **message**.
++ **n** for the **name** of the person who wrote the message
++ **t** for the **timestamp** the message was *received* by the node server (_to avoid time-zone issues_);
 
 ## Background Reading
 
 + **Matt Harrison** has *basic example*, but ***no tests*** (*bad habits*):
 http://matt-harrison.com/using-hapi-js-with-socket-io
++ **Scalability**: https://en.wikipedia.org/wiki/Scalability#Horizontal_and_vertical_scaling
++ Difference between scaling horizontally and vertically for databases:
+http://stackoverflow.com/questions/11707879/difference-between-scaling-horizontally-and-vertically-for-databases
++ How to use redis PUBLISH/SUBSCRIBE with nodejs to notify clients when data values change? http://stackoverflow.com/questions/4441798/how-to-use-redis-publish-subscribe-with-nodejs-to-notify-clients-when-data-value (_don't you **love** it when someone else has aready asked/answered your questions...?)

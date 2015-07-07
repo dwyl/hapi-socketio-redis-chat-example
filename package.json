@@ -13,7 +13,11 @@
     "chat",
     "real-time",
     "socket.io",
-    "redis"
+    "redis",
+    "pubsub",
+    "publish",
+    "subscribe",
+    "scalable"
   ],
   "author": "@nelsonic",
   "license": "GPL-2.0",
