@@ -1,17 +1,4 @@
-// To create a new socket.io handshake make a POST request to http://localhost:8000/socket.io/1
-// use the resulting session ID for subsequent requests (see https://github.com/LearnBoost/socket.io-spec)
-// For example, in the chrome debug console you can create a new WebSocket with the following URI
-// 'ws://localhost:8000/socket.io/1/websocket/Ww4ULq6wOTUZYD62v3yu'
-// where Ww4ULq6wOTUZYD62v3yu is the session ID
-// var redis  = require("redis");
-// var redis_client = redis.createClient();
-var redis_client = require('./lib/redis_connection');
-// confirm redis is working as expected:
-redis_client.set("Redis-Status", "Working");
-redis_client.get("Redis-Status", function(err, reply) {
-   console.log('Redis Status: ' + reply);
-});
-
+var redisClient = require('./lib/redis_connection'); // RedisCloud
 var Hapi = require('hapi');
 var SocketIO = require('socket.io');
 var server = new Hapi.Server();
@@ -19,6 +6,14 @@ server.connection({
 	host: '0.0.0.0',
 	port: Number(process.env.PORT || 8000)
 });
+
+function loadMessages (req, reply) {
+  redisClient.lrange("chat", 0, -1, function(err, data) {
+    if(err){ console.log(err) }
+    console.log(data);
+    reply(data);
+  });
+}
 
 server.route([
   { method: 'GET', path: '/', handler: { file: "index.html" } },
@@ -31,7 +26,8 @@ server.route([
   handler: {
       file: './client.js'
     }
-  }
+  },
+  { method: 'GET', path: '/load', handler: loadMessages }
 ]);
 
 server.start(function () {
@@ -42,15 +38,29 @@ server.start(function () {
 
       socket.emit('Hello!');
 
+      socket.on('name', function (name) {
+        redisClient.HSET("people", socket.client.conn.id, name);
+        console.log(socket.client.conn.id, name + ' joined!');
+        io.emit('name', name);
+      });
+
       socket.on('message', function (msg, etc) {
-        var obj = { // store each message as an object
-          m: msg,
-          t: new Date().getTime(),
-          u: socket.client.conn.id
-        }
-        redis_client.RPUSH("chat", JSON.stringify(obj));
-        console.log(socket.client.conn.id, msg);
-        io.emit('message', msg);
+
+        redisClient.HGET("people", socket.client.conn.id, function (err, name) {
+            if (err) {
+              console.log(err);
+            }
+            console.log(name);
+            var obj = { // store each message as an object
+              m: msg,
+              t: new Date().getTime(),
+              n: name
+            }
+            var str = JSON.stringify(obj)
+            redisClient.RPUSH("chat", str);
+            console.log(str);
+            io.emit('message', str);
+        })
       });
   });
 });

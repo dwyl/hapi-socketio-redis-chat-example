@@ -25,5 +25,5 @@
   "undef"         : true,
   "white"         : true,
   "browser"       : true,
-  "globals": { "$": true, "io": true }
+  "globals": { "$": true, "io": true, "Cookies": true }
 }
