@@ -34,12 +34,12 @@ test(file +" Socket.io Tests", function(Q) {
     client.on('connect', function(data) {
       console.log('TEST Chat Client CONNECTED!!')
       // send a message BEFORE registering
-      client.emit('message', message);
+      client.emit('io:message', message);
 
       setTimeout(function() { // wait 500ms and then register
-        client.emit('name', 'Adam');
+        client.emit('io:name', 'Adam');
         setTimeout(function(){
-          client.emit('message', message);
+          client.emit('io:message', message);
           setTimeout(function() {
             Q.ok(true, "✓ Socket.io tests complete");
             done();
@@ -48,17 +48,17 @@ test(file +" Socket.io Tests", function(Q) {
       }, 1000);
     });
 
-    client.on('welcome', function(data) {
+    client.on('io:welcome', function(data) {
       console.log('Welcome - > ', data);
       Q.ok(data, "✓ Welcome Received")
     });
 
-    client.on('name', function(data) {
+    client.on('io:name', function(data) {
       console.log(' - - - - - - - > ', data);
       Q.ok(data, "✓ name received")
     });
 
-    client.on('message', function(data) {
+    client.on("chat:messages:latest", function(data) {
       console.log(' - - - - - - - > ', data);
       var msg = JSON.parse(data);
       Q.equal(msg.m, message, "✓ message received: " + msg.m);
