@@ -6,89 +6,59 @@ var redisClient = require('../lib/redis_connection');
 var dir    = __dirname.split('/')[__dirname.split('/').length-1];
 var file   = dir + __filename.replace(__dirname, '') + " -> ";
 
-var server = require("../server.js");
+var http = require('http');
+var server = http.createServer(function (req, res) {
+  res.end("hello world\n");
+}).listen(8000);
 
-test(file +" GET / returns status 200", function(Q) {
-  var done = Q.async();
-  var options = {
-    method  : "GET",
-    url     : "/"
-  };
-  console.log(options);
-  server.inject(options, function(res) {
-    Q.equal(res.statusCode, 200, 'home page loads');
-    // server.stop();
-    // var uncache = require('./uncache').uncache;   // http://goo.gl/JIjK9Y - - - \\
-    // redisClient.end();     // ensure redis con closed! - \\
-    // uncache('../lib/redis_connection');           // uncache redis con  - - - - \\
-    done();
-  });
-});
-
-test(file +" GET /load returns previous messages", function(Q) {
-  var done = Q.async();
-  var options = {
-    method  : "GET",
-    url     : "/load"
-  };
-  console.log(options);
-  server.inject(options, function(res) {
-    Q.equal(res.statusCode, 200, 'previous messages received');
-    // console.log(res.payload);
-    var messages = JSON.parse(res.payload);
-    Q.ok(messages.length > 0);
-    server.stop();
-    var uncache = require('./uncache').uncache;   // http://goo.gl/JIjK9Y - - - \\
-    redisClient.end();     // ensure redis con closed! - \\
-    uncache('../lib/redis_connection');           // uncache redis con  - - - - \\
-    done();
-  });
-});
-
-// start SocketIO CLIENT so we can listen for the restart event
-var io = require('socket.io').listen(5000);
+var chat = require('../lib/chat')(server);
+// start SocketIO CLIENT so we can connect
 var ioclient = require('socket.io-client');
-var handler = require('../lib/chat_handler');
 
-io.on('connection', handler);
 
 test(file +" Socket.io Tests", function(Q) {
   var done = Q.async();
-  // require('socket.io-client')();
-
-  var options = {
-    method  : "GET",
-    url     : "/"
-  };
-  // server.inject(options, function(res) {
-    ioptions = {
+  var message = 'its not always rainbows and butterflies...';
+  setTimeout(function() {
+    var ioptions = {
       transports: ['websocket'],
       'force new connection': true,
       reconnect: true
     }
-    var client = ioclient.connect('http://0.0.0.0:5000', ioptions);
+    var client = ioclient.connect('http://0.0.0.0:8000', ioptions);
     // console.log(client);
     client.on('connect',function(data) {
       console.log(' - - - - > CONNECTED!!')
-      client.emit('name', 'charlie');
+      // send a message BEFORE registering:
+      client.emit('message', message);
+      setTimeout(function() { // wait 500ms and then register
+        client.emit('name', 'Adam');
+        client.emit('message', message);
+      })
     });
     client.on('name', function(data) {
       console.log(' - - - - - - - > ', data);
       Q.ok(data, "✓ name received")
     });
+
+    client.on('message', function(data) {
+      console.log(' - - - - - - - > ', data);
+      var msg = JSON.parse(data);
+      Q.equal(msg.m, message, "✓ message received: " + msg.m);
+    });
+
+    // wait before cleaning up:
     setTimeout(function() {
+      client.disconnect();
+      Q.ok(true, "✓ Cleanup Complete");
+      var uncache = require('./uncache').uncache; // http://goo.gl/JIjK9Y - - - \\
+      require('../lib/redis_connection').end();   // ensure redis con closed! - \\
+      uncache('../lib/redis_connection');         // uncache redis con  - - - - \\
+      server.close();
+      done();
+    },3000);
 
-
-      // wait before cleaning up:
-      setTimeout(function() {
-        client.disconnect();
-        Q.ok(true, "✓ Cleanup Complete");
-        server.stop();
-        done();
-      },3000);
-    },1000);
-
-  // });
+  },1000);
 
 });
 

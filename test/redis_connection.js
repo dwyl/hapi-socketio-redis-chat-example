@@ -5,6 +5,7 @@ require('qunit-tap')(QUnit, console.log); // use console.log for test output
 var redisClient = require('../lib/redis_connection');
 // console.log(redisClient);
 
+
 // var test = require('tape');
 var dir    = __dirname.split('/')[__dirname.split('/').length-1];
 var file   = dir + __filename.replace(__dirname, '') + " -> ";
@@ -22,13 +23,13 @@ test(file +" Confirm RedisCloud is accessible GET/SET", function(Q) {
   });
 });
 
-test('taredown', function(Q){
+test('teardown', function(Q){
   var uncache = require('./uncache').uncache; // http://goo.gl/JIjK9Y - - - \\
   require('../lib/redis_connection').end();   // ensure redis con closed! - \\
   uncache('../lib/redis_connection');         // uncache redis con  - - - - \\
   // console.log(redisClient)
   Q.equal(redisClient.connected, false);
-})
+});
 
 // tape doesn't have a "after" function. see: http://git.io/vf0BM - - - - - - \\
 // so... we have to add this test to *every* file to tidy up. - - - - - - - - \\
