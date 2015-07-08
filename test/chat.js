@@ -53,8 +53,8 @@ test(file +" Socket.io Tests", function(Q) {
       Q.ok(data, "✓ Welcome Received")
     });
 
-    client.on('io:name', function(data) {
-      console.log(' - - - - - - - > ', data);
+    client.on('chat:people:new', function(data) {
+      console.log('chat:people:new - - - - - - - > ', data);
       Q.ok(data, "✓ name received")
     });
 
