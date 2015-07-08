@@ -1,33 +1,43 @@
 var QUnit = require('qunitjs'); // require QUnit node.js module
 var test = QUnit.test; // stores a copy of QUnit.test
 require('qunit-tap')(QUnit, console.log); // use console.log for test output
-// console.log(test.toString());
-var redisClient = require('../lib/redis_connection')();
-// console.log(redisClient);
 
-
-// var test = require('tape');
 var dir    = __dirname.split('/')[__dirname.split('/').length-1];
 var file   = dir + __filename.replace(__dirname, '') + " -> ";
+var redisClient = require('../lib/redis_connection')(); // RedisCloud
+var uncache = require('./uncache').uncache; // http://goo.gl/JIjK9Y - - - \\
 
-// console.log('hello!');
 
 test(file +" Confirm RedisCloud is accessible GET/SET", function(Q) {
-  // console.log('this')
   var done = Q.async();
   redisClient.set('redis', 'working', redisClient.print);
-  // console.log('this')
   redisClient.get('redis', function (err, reply) {
     Q.equal(reply.toString(), 'working', 'RedisCLOUD is ' +reply.toString());
     done();
   });
 });
 
-test('teardown', function(Q){
+test('Close Connection to RedisCloud', function(Q){
   var uncache = require('./uncache').uncache; // http://goo.gl/JIjK9Y - - - \\
   redisClient.end();   // ensure redis con closed! - \\
-  // uncache('../lib/redis_connection');         // uncache redis con  - - - - \\
-  // console.log(redisClient)
+  Q.equal(redisClient.connected, false);
+});
+
+test(file +" Connect to LOCAL Redis instance and GET/SET", function(Q) {
+  var done = Q.async();
+  delete process.env.REDISCLOUD_URL; // ensures we connect to LOCAL redis
+  uncache('../lib/redis_connection');
+  redisClient = require('../lib/redis_connection')(); // LOCAL Redis
+  Q.equal(redisClient.address, '127.0.0.1:6379', "Redis Client connected to: " + redisClient.address)
+  redisClient.set('redis', 'LOCAL', redisClient.print);
+  redisClient.get('redis', function (err, reply) {
+    Q.equal(reply.toString(), 'LOCAL', 'LOCAL Redis is ' +reply.toString());
+    done();
+  });
+});
+
+test('Close Connection to LOCAL Redis', function(Q){
+  redisClient.end();   // ensure redis con closed! - \\
   Q.equal(redisClient.connected, false);
 });
 

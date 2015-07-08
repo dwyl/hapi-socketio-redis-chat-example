@@ -43,23 +43,23 @@ test(file +" Socket.io Tests", function(Q) {
           setTimeout(function() {
             Q.ok(true, "✓ Socket.io tests complete");
             done();
-          },2000);
-        },2000);
-      }, 1000);
+          },200);
+        },200);
+      }, 100);
     });
 
     client.on('io:welcome', function(data) {
-      console.log('Welcome - > ', data);
+      console.log('TEST Welcome - > ', data);
       Q.ok(data, "✓ Welcome Received")
     });
 
     client.on('chat:people:new', function(data) {
-      console.log('chat:people:new - - - - - - - > ', data);
+      console.log('TEST chat:people:new - > ', data);
       Q.ok(data, "✓ name received")
     });
 
     client.on("chat:messages:latest", function(data) {
-      console.log(' - - - - - - - > ', data);
+      console.log("TEST chat:messages:latest - > ", data);
       var msg = JSON.parse(data);
       Q.equal(msg.m, message, "✓ message received: " + msg.m);
     });

@@ -42,8 +42,8 @@ test(file +" Teardown > End Redis Connection & Stop Hapi Server", function(Q) {
   // var redisClient = require('../lib/redis_connection');
   // redisClient.end();     // ensure redis con closed! - \\
   require('../lib/chat').redisClient.end();
-  require('../lib/chat').subscriber.end();
-  require('../lib/publisher').publisher.end();
+  require('../lib/chat').sub.end();
+  require('../lib/chat').pub.end();
   require('../lib/load_messages').redisClient.end();
   uncache('../lib/load_messages'); // uncache redis con  - - - - \\
   uncache('../lib/chat');
