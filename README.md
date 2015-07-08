@@ -7,7 +7,7 @@ A basic chat application built with Hapi.js Socket.io and Redis Pub/Sub
 ![hapi-chat-demo](https://cdn.rawgit.com/nelsonic/nelsonic.github.io/master/img/hapi-chat-full-res.gif)
 (_click on the image for full-screen version - this mini one looks pixelated ...!_)
 
-## Why
+## Why?
 
 Node.js Chat Apps are practically the "Hello World" of real-time apps.
 If you Google for
@@ -56,12 +56,13 @@ so your most likely "bottleneck" is node (*nuts, hey!?*)
 ### Mobile First
 
 Given the simplicity of the UI, the chat app is mobile-first by default.
-> _If anyone has time to Pull-Request a few media queries to make it **even better** on mobile, we would massively appreciate the contribution_!
+> _If anyone has time to **Pull Request** a few CSS media queries to make the UI **even better** on **mobile devices**, we would massively appreciate the contribution_!
 
-### Returning Visitor
+### *Returning* Visitor
 
-We use cookies to store the person's name on the client.
-This is sent to the server when the open the chat so they are "logged on" to that server.
+We use cookies to store the person's name on the client. If the person
+clears cookies (_or uses private browsing / incognito mode_) they will be asked
+for their name each time they open the chat window. (_this is pretty standard_)
 
 ####  How Many Recent Messages Should we Cache?
 
@@ -94,9 +95,11 @@ We use:
 
 ## Background Reading
 
-+ **Matt Harrison** has *basic example*, but ***no tests*** (*bad habits*):
++ **Matt Harrison** has *basic example*, but ***no tests*** (*bad habits ...*):
 http://matt-harrison.com/using-hapi-js-with-socket-io
 + **Scalability**: https://en.wikipedia.org/wiki/Scalability#Horizontal_and_vertical_scaling
 + Difference between scaling horizontally and vertically for databases:
 http://stackoverflow.com/questions/11707879/difference-between-scaling-horizontally-and-vertically-for-databases
 + How to use redis PUBLISH/SUBSCRIBE with nodejs to notify clients when data values change? http://stackoverflow.com/questions/4441798/how-to-use-redis-publish-subscribe-with-nodejs-to-notify-clients-when-data-value (_don't you **love** it when someone else has aready asked/answered your questions...?)
++ node_redis pub/sub example: https://github.com/mranney/node_redis/blob/master/examples/pub_sub.js
++ Redis PubSub example using express (_no tests_!): https://github.com/rajaraodv/redispubsub

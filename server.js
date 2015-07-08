@@ -1,4 +1,3 @@
-var redisClient = require('./lib/redis_connection'); // RedisCloud
 var Hapi = require('hapi');
 var server = new Hapi.Server();
 

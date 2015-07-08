@@ -56,7 +56,7 @@ test(file +" Socket.io Tests", function(Q) {
       uncache('../lib/redis_connection');         // uncache redis con  - - - - \\
       server.close();
       done();
-    },3000);
+    },2000);
 
   },1000);
 
