@@ -47,11 +47,15 @@ Top 3 reasons why Redis is the *clear* choice for storing chat messages.
 2. ***Simple*** - pushing messages onto a list (set) is the _simplest
 possible_ way to store a chat history. Given that we can store up to **512Mb** *per chat* and *stream* chat *history* to new clients (*low http overhead*) its an
 *incredibly simple setup*!
-3. ***Scalable*** ***Publish/Subscribe*** ("_architecture_") means you can scale *out*
+3. ***Scalable*** ***Publish/Subscribe*** ("_pattern_") means you can scale *out*
 (*add more node.js/socket.io servers when you need to serve more clients*)
 Redis can already handle an ***order of magnitude*** more than other NoSQL Databases,
 so your most likely "bottleneck" is node (*nuts, hey!?*)
 
+### Publish / Subscribe ...?
+
+The Publish Subscribe "_Pattern_" is (_still_) **the simple_st_** way of scaling software applications.
+if you are new to this idea, see: https://en.wikipedia.org/wiki/Publish%E2%80%93subscribe_pattern
 
 ### Mobile First
 
@@ -100,6 +104,8 @@ http://matt-harrison.com/using-hapi-js-with-socket-io
 + **Scalability**: https://en.wikipedia.org/wiki/Scalability#Horizontal_and_vertical_scaling
 + Difference between scaling horizontally and vertically for databases:
 http://stackoverflow.com/questions/11707879/difference-between-scaling-horizontally-and-vertically-for-databases
++ Using Pub/Sub for Asynchronous Communication:
+http://www.rediscookbook.org/pubsub_for_asynchronous_communication.html
 + How to use redis PUBLISH/SUBSCRIBE with nodejs to notify clients when data values change? http://stackoverflow.com/questions/4441798/how-to-use-redis-publish-subscribe-with-nodejs-to-notify-clients-when-data-value (_don't you **love** it when someone else has aready asked/answered your questions...?)
 + node_redis pub/sub example: https://github.com/mranney/node_redis/blob/master/examples/pub_sub.js
 + Redis PubSub example using express (_no tests_!): https://github.com/rajaraodv/redispubsub

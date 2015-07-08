@@ -26,10 +26,8 @@
   },
   "homepage": "https://github.com/nelsonic/hapi-socketio-redis-chat-example#readme",
   "dependencies": {
-    "chalk": "^1.0.0",
     "hapi": "^8.6.x",
     "hiredis": "^0.4.0",
-    "hoek": "^2.14.0",
     "redis": "^0.12.1",
     "socket.io": "^1.3.5",
     "socket.io-client": "^1.3.5",
