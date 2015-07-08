@@ -21,6 +21,7 @@ server.route([
 
 server.start(function () {
 	require('./lib/chat')(server.listener);
+	require('./lib/publish')();
 });
 
 module.exports = server;
