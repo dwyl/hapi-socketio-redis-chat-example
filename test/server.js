@@ -39,10 +39,15 @@ test(file +" GET /load returns previous messages", function(Q) {
 test(file +" Teardown > End Redis Connection & Stop Hapi Server", function(Q) {
   var done = Q.async();
   var uncache = require('./uncache').uncache;   // http://goo.gl/JIjK9Y - - - \\
-  var redisClient = require('../lib/redis_connection');
-  redisClient.end();     // ensure redis con closed! - \\
-  uncache('../lib/redis_connection');           // uncache redis con  - - - - \\
-  Q.equal(redisClient.connected, false);
+  // var redisClient = require('../lib/redis_connection');
+  // redisClient.end();     // ensure redis con closed! - \\
+  require('../lib/chat').redisClient.end();
+  require('../lib/chat').subscriber.end();
+  require('../lib/publisher').publisher.end();
+  require('../lib/load_messages').redisClient.end();
+  uncache('../lib/load_messages'); // uncache redis con  - - - - \\
+  uncache('../lib/chat');
+  Q.equal(false, false);
   server.stop();
   done();
 });
