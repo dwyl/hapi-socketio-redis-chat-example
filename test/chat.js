@@ -13,17 +13,13 @@ var server = http.createServer(function (req, res) {
 }).listen(5000);
 
 var chat = require('../lib/chat');
-chat.init(server);
-var pub   = chat.pub;
-var sub   = chat.sub;
-var redisClient = chat.redisClient;
 var ioclient    = require('socket.io-client');
 var client; // GLOBAL (only to the test!)
 
 test(file +" Socket.io Tests", function(Q) {
   var done = Q.async();
   var message = 'its not always rainbows and butterflies...';
-  setTimeout(function() {
+  chat.init(server, function(){
     var ioptions = {
       transports: ['websocket'],
       'force new connection': true,
@@ -43,9 +39,9 @@ test(file +" Socket.io Tests", function(Q) {
           setTimeout(function() {
             Q.ok(true, "✓ Socket.io tests complete");
             done();
-          },200);
+          },100);
         },200);
-      }, 100);
+      }, 300);
     });
 
     client.on('io:welcome', function(data) {
@@ -64,25 +60,7 @@ test(file +" Socket.io Tests", function(Q) {
       Q.equal(msg.m, message, "✓ message received: " + msg.m);
     });
 
-    // wait before cleaning up:
-    // setTimeout(function() {
-    //   client.disconnect();
-    //   Q.ok(true, "✓ Cleanup Complete");
-    //   var uncache = require('./uncache').uncache; // http://goo.gl/JIjK9Y - - - \\
-    //   // require('../lib/redis_connection')().end();
-    //   var subscriber = require('../lib/chat').subscriber;
-    //   subscriber.unsubscribe();
-    //   subscriber.end();
-    //   var publisher = require('../lib/publish').publisher;
-    //   publisher.end();   // ensure redis con closed! - \\
-    //   var redisClient = require('../lib/chat').redisClient;
-    //   redisClient.end();   // ensure redis con closed! - \\
-    //
-    //   uncache('../lib/redis_connection')         // uncache redis con  - - - - \\
-    //   server.close();
-    // },3000);
-
-  },2000);
+  },1000);
 
 });
 
@@ -92,16 +70,18 @@ test(file +" Socket.io Tests", function(Q) {
   Q.ok(true, "✓ Cleanup Complete");
   var uncache = require('./uncache').uncache; // http://goo.gl/JIjK9Y - - - \\
   // require('../lib/redis_connection')().end();
-  sub.unsubscribe();
-  sub.end();
-  pub.end();   // ensure redis con closed! - \\
-  redisClient.end();   // ensure redis con closed! - \\
-
-  uncache('../lib/redis_connection')         // uncache redis con  - - - - \\
+  chat.sub.unsubscribe();   // unsubscribe (duh!)
+  chat.sub.end();           // end subscriber connection
+  chat.pub.end();           // ensure redis publisher connnection closed! - \\
+  chat.redisClient.end();   // ensure redis client connnection closed! - \\
+  uncache('../lib/redis_config.js')         // uncache redis con  - - - - \\
   server.close();
   done();
-
 });
+
+
+
+
 
 
 /* istanbul ignore next */
