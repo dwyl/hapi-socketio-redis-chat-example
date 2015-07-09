@@ -97,6 +97,13 @@ We use:
 + **n** for the **name** of the person who wrote the message
 + **t** for the **timestamp** the message was *received* by the node server (_to avoid time-zone issues_);
 
+## Run it!
+
+```sh
+export PORT=8000
+```
+
+
 ## Background Reading
 
 + **Matt Harrison** has *basic example*, but ***no tests*** (*bad habits ...*):

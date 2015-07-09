@@ -3,7 +3,7 @@ var server = new Hapi.Server();
 
 server.connection({
 	host: '0.0.0.0',
-	port: Number(process.env.PORT || 8000)
+	port: Number(process.env.PORT)
 });
 
 server.route([
@@ -21,7 +21,7 @@ server.route([
 
 server.start(function () {
 	require('./lib/chat').init(server.listener, function(){
-		console.log('What do you want to talk about...?', 'listening on: http://127.0.0.1:'+8000);
+		console.log('What do you want to talk about...?', 'listening on: http://127.0.0.1:'+process.env.PORT);
 	});
 });
 

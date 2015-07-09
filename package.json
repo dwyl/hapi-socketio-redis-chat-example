@@ -1,14 +1,15 @@
 {
   "name": "hapi-socketio-redis-chat-example",
-  "version": "1.0.1",
-  "description": "Real-time Chat in Hapi.js & Socket.io  with Redis as Backend",
+  "version": "2.0.0",
+  "description": "Real-time Chat in Hapi.js & Socket.io with Redis Pub/Sub Backend for Linear Scalability",
   "main": "server.js",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/nelsonic/hapi-socketio-redis-chat-example.git"
+    "url": "git+https://github.com/dwyl/hapi-socketio-redis-chat-example.git"
   },
   "keywords": [
     "hapi",
+    "hapi.js",
     "node",
     "chat",
     "real-time",
@@ -22,38 +23,33 @@
   "author": "@nelsonic",
   "license": "GPL-2.0",
   "bugs": {
-    "url": "https://github.com/nelsonic/hapi-socketio-redis-chat-example/issues"
+    "url": "https://github.com/dwyl/hapi-socketio-redis-chat-example/issues"
   },
-  "homepage": "https://github.com/nelsonic/hapi-socketio-redis-chat-example#readme",
+  "homepage": "https://github.com/dwyl/hapi-socketio-redis-chat-example#readme",
   "dependencies": {
     "hapi": "^8.6.x",
     "hiredis": "^0.4.0",
     "redis": "^0.12.1",
     "socket.io": "^1.3.5",
-    "socket.io-client": "^1.3.5",
-    "terminate": "^1.0.5",
-    "useragent": "^2.1.5"
+    "socket.io-client": "^1.3.5"
   },
   "devDependencies": {
     "codeclimate-test-reporter": "0.0.4",
-    "jshint": "^2.7.0",
-    "pre-commit": "1.0.6",
-    "istanbul": "^0.3.17",
     "jsdoc": "^3.3.2",
+    "jshint": "^2.7.0",
+    "lab": "^5.13.0",
     "nodemon": "^1.3.7",
-    "qunit-tap": "^1.5.0",
-    "qunitjs": "^1.18.0",
-    "wreck": "^5.4.0"
+    "pre-commit": "1.0.6"
   },
   "scripts": {
-    "start": "./node_modules/.bin/nodemon ./server.js",
-    "nocov": "node ./test/*.js",
-    "test": "istanbul cover ./test/*.js",
-    "coverage": "istanbul check-coverage --statements 100 --functions 100 --lines 100 --branches 100",
-    "open-coverage":"open ./coverage/lcov-report/index.html",
+    "docs": "./node_modules/jsdoc/jsdoc.js ./lib/*.js",
+    "nocov": "./node_modules/lab/bin/lab",
+    "test": "./node_modules/lab/bin/lab -c -r 'console'",
+    "coverage": "./node_modules/lab/bin/lab -r html -o ./test/coverage.html && ./node_modules/lab/bin/lab -r lcov -o ./test/lcov.info",
+    "codeclimate": "CODECLIMATE_REPO_TOKEN=c1fd44b286100ffb10e243fd0a8efb7421adbfa77bb0198c8fce92e0baeb55bf ./node_modules/codeclimate-test-reporter/bin/codeclimate.js < ./test/lcov.info",
+    "open-coverage": "open ./test/coverage.html",
     "jshint": "jshint -c .jshintrc --exclude-path .gitignore .",
-    "codeclimate": "CODECLIMATE_REPO_TOKEN=9825169f8f3a0bdf7351a71da9474c212e819bf0ea6fed60b57be83ff53e9459 ./node_modules/codeclimate-test-reporter/bin/codeclimate.js < ./coverage/lcov.info",
-    "docs": "./node_modules/jsdoc/jsdoc.js change.js"
+    "start": "./node_modules/.bin/nodemon ./server.js"
   },
   "pre-commit": [
     "jshint",
