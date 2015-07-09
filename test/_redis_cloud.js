@@ -12,7 +12,7 @@ lab.experiment('RedisCloud Connection Check', { timeout: 10000 }, function () {
   // var REDISCLOUD_URL = process.env.REDISCLOUD_URL;
   uncache('../lib/redis_config.js');
   console.log('- - > process.env.REDISCLOUD_URL '+ process.env.REDISCLOUD_URL);
-  var rc          = require('../lib/redis_config.js');
+  var rc  = require('../lib/redis_config.js');
   console.log(rc);
   var redisClient = redis.createClient(rc.port, rc.host, {no_ready_check: true});
   redisClient.auth(rc.auth);
