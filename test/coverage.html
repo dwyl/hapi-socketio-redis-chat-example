@@ -417,8 +417,8 @@
       <div class="stats terrible">
           <div class="failures">1</div>
           <div class="skipped">0</div>
-          <div class="test-count">8</div>
-          <div class="duration">10283</div>
+          <div class="test-count">7</div>
+          <div class="duration">10300</div>
       </div>
       <div id="filters">
           <input type="checkbox" checked="" onchange="filter(this)" value="success" id="show-success"><label for="show-success">Show Success</label></input>
@@ -434,63 +434,56 @@
           </tr>
           </thead>
           <tbody>
-          <tr class="show math failure">
+          <tr class="show  success">
               <td class="test-id">1</td>
+              <td class="test-title"> test/_redis_checks.js -&gt;  Confirm RedisCloud is accessible GET/SET
+                  
+              </td>
+              <td class="test-duration">200</td>
+          </tr>
+          <tr class="show  success">
+              <td class="test-id">2</td>
+              <td class="test-title"> Close Connection to RedisCloud
+                  
+              </td>
+              <td class="test-duration">3</td>
+          </tr>
+          <tr class="show  success">
+              <td class="test-id">3</td>
+              <td class="test-title"> test/_redis_checks.js -&gt;  Connect to LOCAL Redis instance and GET/SET
+                  
+              </td>
+              <td class="test-duration">12</td>
+          </tr>
+          <tr class="show math failure">
+              <td class="test-id">4</td>
               <td class="test-title">math test/chat.js -&gt;  Socket.io Tests
                   <div class="stack">Error: Timed out (10000ms) - math test/chat.js -&gt;  Socket.io Tests
     at null.&lt;anonymous&gt; (/Users/n/code/hapi-socketio-redis-chat-example/node_modules/lab/lib/runner.js:424:25)
     at Timer.listOnTimeout (timers.js:110:15)</div>
               </td>
-              <td class="test-duration">10007</td>
-          </tr>
-          <tr class="show  success">
-              <td class="test-id">2</td>
-              <td class="test-title"> test/redis_connection.js -&gt;  Confirm RedisCloud is accessible GET/SET
-                  
-              </td>
-              <td class="test-duration">187</td>
-          </tr>
-          <tr class="show  success">
-              <td class="test-id">3</td>
-              <td class="test-title"> Close Connection to RedisCloud
-                  
-              </td>
-              <td class="test-duration">1</td>
-          </tr>
-          <tr class="show  success">
-              <td class="test-id">4</td>
-              <td class="test-title"> test/redis_connection.js -&gt;  Connect to LOCAL Redis instance and GET/SET
-                  
-              </td>
-              <td class="test-duration">7</td>
+              <td class="test-duration">10004</td>
           </tr>
           <tr class="show  success">
               <td class="test-id">5</td>
-              <td class="test-title"> Close Connection to LOCAL Redis
-                  
-              </td>
-              <td class="test-duration">0</td>
-          </tr>
-          <tr class="show  success">
-              <td class="test-id">6</td>
               <td class="test-title"> test/server.js -&gt; GET / returns status 200
                   
               </td>
-              <td class="test-duration">7</td>
+              <td class="test-duration">10</td>
           </tr>
           <tr class="show  success">
-              <td class="test-id">7</td>
+              <td class="test-id">6</td>
               <td class="test-title"> test/server.js -&gt; GET /load returns previous messages
                   
               </td>
-              <td class="test-duration">69</td>
+              <td class="test-duration">68</td>
           </tr>
           <tr class="show  success">
-              <td class="test-id">8</td>
+              <td class="test-id">7</td>
               <td class="test-title"> test/server.js -&gt; Teardown &gt; End Redis Connection &amp; Stop Hapi Server
                   
               </td>
-              <td class="test-duration">3</td>
+              <td class="test-duration">2</td>
           </tr>
           </tbody>
       </table>
@@ -1210,7 +1203,7 @@
                             <tr class="chunks">
                                 <td class="line">3</td>
                                 <td class="hits"></td>
-                                <td class="source"><div>if(</div><div class="miss false">process.env.REDISCLOUD_URL</div><div>) {</div></td>
+                                <td class="source"><div>if(</div><div class="miss false">process.env.REDISCLOUD_URL</div><div> &amp;&amp; </div><div class="miss never">process.env.REDISCLOUD_URL.length &gt; 1</div><div>) {</div></td>
                             </tr>
                             <tr class="miss">
                                 <td class="line">4</td>

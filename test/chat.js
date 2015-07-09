@@ -17,7 +17,7 @@ var server = require('../server.js')
 var chat = require('../lib/chat');
 var ioclient = require('socket.io-client');
 
-lab.experiment('math', { timeout: 10000 }, function () {
+lab.experiment('Socket.io Chat E2E Tests', { timeout: 10000 }, function () {
 
   lab.test(file +" Socket.io Tests", function(done) {
     var message = 'its not always rainbows and butterflies...';
@@ -75,24 +75,3 @@ lab.experiment('math', { timeout: 10000 }, function () {
   });
 
 }); // end lab.experiment
-
-/*** TEST LOCAL REDIS Instance ***/
-
-// lab.test(file +" Connect to LOCAL Redis instance and GET/SET", function(done) {
-//   delete process.env.REDISCLOUD_URL; // ensures we connect to LOCAL redis
-//   uncache('../lib/redis_config.js');
-//   rc  = require('../lib/redis_config.js');
-//   redisClient = redis.createClient(rc.port, rc.host)
-//   redisClient.auth(rc.auth);
-//   Q.equal(redisClient.address, '127.0.0.1:6379', "✓ Redis Client connected to: " + redisClient.address)
-//   redisClient.set('redis', 'LOCAL', redisClient.print);
-//   redisClient.get('redis', function (err, reply) {
-//     Q.equal(reply.toString(), 'LOCAL', '✓ LOCAL Redis is ' +reply.toString());
-//     done();
-//   });
-// });
-//
-// lab.test('Close Connection to LOCAL Redis', function(){
-//   redisClient.end();   // ensure redis con closed! - \\
-//   assert.equal(redisClient.connected, false,  "✓ Connection to LOCAL Closed");
-// });
