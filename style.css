@@ -3,7 +3,7 @@ body { font: 1.5em Helvetica, Arial; }
 form { background: #2c3e50; padding: 3px; position: fixed; bottom: 0; width: 100%; }
 form input { border: 0; padding:0.5em; width: 85%; height: 2px; margin-right: .5%; height: 2em; font-size: 2em;}
 form button { width: 14%; height: 2em; background: #27ae60; border: none; padding: 10px; color: white; font-size: 2em;}
-#messages { list-style-type: none; margin: 0; padding: 0; }
+#messages { list-style-type: none; margin: 0; padding: 0; height 90%}
 #messages li { padding: 5px 10px; }
 #messages li:nth-child(odd) { background: #eee; }
 #joiners {  height: 2em; color: white; padding: 0.5em 0 1em 2em; z-index: 3; background-color:#2c3e50; opacity:0.9;}

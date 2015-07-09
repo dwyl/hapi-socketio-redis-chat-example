@@ -20,7 +20,9 @@ server.route([
 ]);
 
 server.start(function () {
-	require('./lib/chat').init(server.listener);
+	require('./lib/chat').init(server.listener, function(){
+		console.log('What do you want to talk about...?', 'listening on: http://127.0.0.1:'+8000);
+	});
 });
 
 module.exports = server;

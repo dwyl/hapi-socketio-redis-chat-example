@@ -1,10 +1,16 @@
 var QUnit = require('qunitjs'); // require QUnit node.js module
 var test = QUnit.test; // stores a copy of QUnit.test
 require('qunit-tap')(QUnit, console.log); // use console.log for test output
-// var redisClient = require('../lib/redis_connection')();
+var uncache = require('./uncache').uncache; // http://goo.gl/JIjK9Y - - - \\
 
 var dir    = __dirname.split('/')[__dirname.split('/').length-1];
 var file   = dir + __filename.replace(__dirname, '') + " -> ";
+
+var REDISCLOUD_URL = process.env.REDISCLOUD_URL; // ensures we connect to LOCAL redis
+var redis       = require('redis');
+var rc          = require('../lib/redis_config.js'); // config for Cloud/Local
+var redisClient;
+// delete process.env.REDISCLOUD_URL; // ensures we connect to LOCAL redis
 
 // create a simple http server to attach our socket.io listener to
 var http = require('http');
@@ -68,8 +74,6 @@ test(file +" Socket.io Tests", function(Q) {
   var done = Q.async();
   client.disconnect();
   Q.ok(true, "✓ Cleanup Complete");
-  var uncache = require('./uncache').uncache; // http://goo.gl/JIjK9Y - - - \\
-  // require('../lib/redis_connection')().end();
   chat.sub.unsubscribe();   // unsubscribe (duh!)
   chat.sub.end();           // end subscriber connection
   chat.pub.end();           // ensure redis publisher connnection closed! - \\
@@ -80,9 +84,29 @@ test(file +" Socket.io Tests", function(Q) {
 });
 
 
+/*** TEST LOCAL REDIS Instance ***/
 
+var redis = require('redis');
 
+test(file +" Connect to LOCAL Redis instance and GET/SET", function(Q) {
+  var done = Q.async();
+  delete process.env.REDISCLOUD_URL; // ensures we connect to LOCAL redis
+  uncache('../lib/redis_config.js');
+  rc  = require('../lib/redis_config.js');
+  redisClient = redis.createClient(rc.port, rc.host)
+  redisClient.auth(rc.auth);
+  Q.equal(redisClient.address, '127.0.0.1:6379', "✓ Redis Client connected to: " + redisClient.address)
+  redisClient.set('redis', 'LOCAL', redisClient.print);
+  redisClient.get('redis', function (err, reply) {
+    Q.equal(reply.toString(), 'LOCAL', '✓ LOCAL Redis is ' +reply.toString());
+    done();
+  });
+});
 
+test('Close Connection to LOCAL Redis', function(Q){
+  redisClient.end();   // ensure redis con closed! - \\
+  Q.equal(redisClient.connected, false,  "✓ Connection to LOCAL Closed");
+});
 
 /* istanbul ignore next */
 if (typeof module !== 'undefined' && module.exports) { QUnit.load(); } // run tests

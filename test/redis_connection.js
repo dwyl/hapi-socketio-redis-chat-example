@@ -8,9 +8,8 @@ var file   = dir + __filename.replace(__dirname, '') + " -> ";
 
 var redis = require('redis');
 var rc  = require('../lib/redis_config.js');
-var redisClient = redis.createClient(rc.port, rc.host); // create client
-redisClient.auth(rc.auth); // *optionally* authenticate when using RedisCloud
-
+var redisClient = redis.createClient(rc.port, rc.host, {no_ready_check: true});
+redisClient.auth(rc.auth)
 
 test(file +" Confirm RedisCloud is accessible GET/SET", function(Q) {
   var done = Q.async();
@@ -33,6 +32,7 @@ test(file +" Connect to LOCAL Redis instance and GET/SET", function(Q) {
   uncache('../lib/redis_config.js');
   rc  = require('../lib/redis_config.js');
   redisClient = redis.createClient(rc.port, rc.host)
+  redisClient.auth(rc.auth);
   Q.equal(redisClient.address, '127.0.0.1:6379', "✓ Redis Client connected to: " + redisClient.address)
   redisClient.set('redis', 'LOCAL', redisClient.print);
   redisClient.get('redis', function (err, reply) {
