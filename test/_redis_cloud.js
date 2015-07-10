@@ -12,12 +12,13 @@ lab.experiment('RedisCloud Connection Check', { timeout: 10000 }, function () {
   // var REDISCLOUD_URL = process.env.REDISCLOUD_URL;
   uncache('../lib/redis_config.js');
   console.log('- - > process.env.REDISCLOUD_URL '+ process.env.REDISCLOUD_URL);
-  var rc          = require('../lib/redis_config.js');
-  console.log(rc);
-  var redisClient = redis.createClient(rc.port, rc.host, {no_ready_check: true});
-  redisClient.auth(rc.auth);
 
   lab.test(file +" Confirm RedisCloud is accessible GET/SET", function(done) {
+
+    var rc  = require('../lib/redis_config.js');
+    console.log(rc);
+    var redisClient = redis.createClient(rc.port, rc.host, {no_ready_check: true});
+    redisClient.auth(rc.auth);
 
     redisClient.set('redis', 'working', redisClient.print);
     console.log("✓ Redis Client connected to: " + redisClient.address);

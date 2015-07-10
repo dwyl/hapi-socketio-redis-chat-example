@@ -97,11 +97,31 @@ We use:
 + **n** for the **name** of the person who wrote the message
 + **t** for the **timestamp** the message was *received* by the node server (_to avoid time-zone issues_);
 
-## Run it!
+# Run it!
 
+## Locally (_on your own mahine_)
+
+Define the TCP `PORT` (_environment variable_) you want the Hapi.js + Socket.io server to listen on:
 ```sh
 export PORT=8000
 ```
+then you can start the app with:
+```sh
+npm install && npm start
+```
+
+## Running the Tests (_Locally_)
+
+To successfully run the tests you need to have an environment variable for RedisCloud
+(this is because we like to know that our code works on both "local" and in a "production" enviroment...)
+
+E.g:
+```sh
+export REDISCLOUD_URL=redis://rediscloud:yourpassword@pub-redis-12345.eu-west-1-2.1.ec2.garantiadata.com:12345
+```
+
+## Heroku (deploying to Heroku)
+
 
 
 ## Background Reading
