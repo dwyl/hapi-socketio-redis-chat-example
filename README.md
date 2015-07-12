@@ -92,23 +92,46 @@ var chat =  [
     '{"m":"Big fan of the little notifications at the top when a person joins","t":1436273109909,"n":"iteles"}'
 ]
 ```
-We use:
-+ **m** for the key of the **message**.
-+ **n** for the **name** of the person who wrote the message
-+ **t** for the **timestamp** the message was *received* by the node server (_to avoid time-zone issues_);
+We use single letters for field keys:
++ **m** for **message**.
++ **n** for **name** of the person who wrote the message
++ **t** for **timestamp** the message was *received* by the node _server_ (_to avoid time-zone issues_);
 
-# Run it!
+# Run it! (_its easy!_)
 
 ## Locally (_on your own mahine_)
+
+Try running the app!
+
+#### 1. Clone the Repository
+
+
+```sh
+git clone https://github.com/dwyl/hapi-socketio-redis-chat-example.git
+cd hapi-socketio-redis-chat-example
+```
+
+#### 2. Define the (_required_) Environment Variables
 
 Define the TCP `PORT` (_environment variable_) you want the Hapi.js + Socket.io server to listen on:
 ```sh
 export PORT=8000
 ```
-then you can start the app with:
+
+#### 3. Install Redis (_if you don't already have it!_)
+
+If you haven't already got an instance of Redis running on your machine,
+Our Redis tutorial has instructions:
+> https://github.com/dwyl/learn-redis#installation
+
+#### 4. Install the Dependencies and Start the Server
+
+Install the start the app with:
 ```sh
 npm install && npm start
 ```
+
+> Now visit: http://127.0.0.1:8000 (_in your browser_)
 
 ## Running the Tests (_Locally_)
 
@@ -122,6 +145,7 @@ export REDISCLOUD_URL=redis://rediscloud:yourpassword@pub-redis-12345.eu-west-1-
 
 ## Heroku (deploying to Heroku)
 
+Are you _new to_ deploying apps to _Heroku_? (_Message us we can talk/walk you through it..._!)
 
 
 ## Background Reading
