@@ -1,5 +1,6 @@
 var test  = require('tape');
-var uncache = require('./uncache').uncache;          // http://goo.gl/JIjK9Y
+var decache = require('decache');          // http://goo.gl/JIjK9Y
+var path = require('path');
 
 var dir     = __dirname.split('/')[__dirname.split('/').length-1];
 var file    = dir + __filename.replace(__dirname, '') + ' ->';
@@ -35,8 +36,8 @@ test(file +" Teardown > End Redis Connection & Stop Hapi Server", function(t) {
   chat.pub.end();
   chat.sub.end();
   require('../lib/load_messages').redisClient.end();
-  uncache('../lib/load_messages'); // uncache redis con  - - - - \\
-  uncache('../lib/chat');
+  decache(path.resolve(__dirname + '../lib/load_messages')); // uncache redis con  - - - - \\
+  decache(path.resolve(__dirname + '../lib/chat'));
   t.equal(chat.sub.connected, false);
   server.stop();
   t.end();

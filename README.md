@@ -135,6 +135,9 @@ E.g:
 export REDISCLOUD_URL=redis://rediscloud:yourpassword@pub-redis-12345.eu-west-1-2.1.ec2.garantiadata.com:12345
 ```
 
+> _Given that our tests include checks for RedisCloud, you will need to have
+internet access to run them ..._
+
 ## Heroku (deploying to Heroku)
 
 Are you _new to_ deploying apps to _Heroku_? (_Message us we can talk/walk you through it..._!)
