@@ -5,15 +5,7 @@ var uncache = require('./uncache').uncache;          // http://goo.gl/JIjK9Y
 var dir     = __dirname.split('/')[__dirname.split('/').length-1];
 var file    = dir + __filename.replace(__dirname, '') + " -> ";
 
-// var REDISCLOUD_URL = process.env.REDISCLOUD_URL; // ensures we connect to LOCAL redis
-// var redis       = require('redis');
-// var rc          = require('../lib/redis_config.js'); // config for Cloud/Local
-// var redisClient;
-// delete process.env.REDISCLOUD_URL; // ensures we connect to LOCAL redis
-
-// var Hapi = require('hapi');
 var server = require('../server.js')
-
 var chat = require('../lib/chat');
 var ioclient = require('socket.io-client');
 
@@ -73,5 +65,4 @@ lab.experiment('Socket.io Chat E2E Tests', { timeout: 10000 }, function () {
       });
     }); // end server.start
   });
-
 }); // end lab.experiment

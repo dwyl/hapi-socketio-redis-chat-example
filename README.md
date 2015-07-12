@@ -13,7 +13,7 @@ Node.js Chat Apps are practically the "Hello World" of real-time apps.
 If you Google for
 "[node.js chat example](https://www.google.pt/search?q=node.js+chat+example)"
 you will see *thousands* of results! But ... 90% of the examples use Express.js,
-95% use MongoDB to store data/messages and **100% don't have any tests**.
+95% use MongoDB to store data/messages and **100% don't have _any_ tests**.
 So, *this* example is for the the people who identify with:
 > "_We use **hapi.js** because we want our code to be **performant** and **reliable**_"
 
@@ -126,7 +126,7 @@ Our Redis tutorial has instructions:
 
 #### 4. Install the Dependencies and Start the Server
 
-Install the start the app with:
+Install the dependencies and *start* the app with:
 ```sh
 npm install && npm start
 ```
