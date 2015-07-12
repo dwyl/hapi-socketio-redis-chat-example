@@ -101,30 +101,22 @@ We use single letters for field keys:
 
 ## Locally (_on your own mahine_)
 
-Try running the app!
+Try running the app! (_Its as easy as 1, 2, 3!_)
 
 #### 1. Clone the Repository
-
 
 ```sh
 git clone https://github.com/dwyl/hapi-socketio-redis-chat-example.git
 cd hapi-socketio-redis-chat-example
 ```
 
-#### 2. Define the (_required_) Environment Variables
-
-Define the TCP `PORT` (_environment variable_) you want the Hapi.js + Socket.io server to listen on:
-```sh
-export PORT=8000
-```
-
-#### 3. Install Redis (_if you don't already have it!_)
+#### 2. Install Redis (_if you don't already have it!_)
 
 If you haven't already got an instance of Redis running on your machine,
 Our Redis tutorial has instructions:
 > https://github.com/dwyl/learn-redis#installation
 
-#### 4. Install the Dependencies and Start the Server
+#### 3. Install the Dependencies and Start the Server
 
 Install the dependencies and *start* the app with:
 ```sh
@@ -133,10 +125,10 @@ npm install && npm start
 
 > Now visit: http://127.0.0.1:8000 (_in your browser_)
 
-## Running the Tests (_Locally_)
+## Running the _Tests_ (_Locally_)
 
 To successfully run the tests you need to have an environment variable for RedisCloud
-(this is because we like to know that our code works on both "local" and in a "production" enviroment...)
+(this is because we like to know that our code works on both "local" and in a "production" environment...)
 
 E.g:
 ```sh

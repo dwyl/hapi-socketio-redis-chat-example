@@ -35,22 +35,23 @@
   },
   "devDependencies": {
     "codeclimate-test-reporter": "0.0.4",
+    "istanbul": "^0.3.14",
     "jsdoc": "^3.3.2",
     "jshint": "^2.7.0",
-    "lab": "^5.13.0",
-    "nodemon": "^1.3.7",
-    "pre-commit": "1.0.6"
+    "pre-commit": "1.0.7",
+    "tap-spec": "^3.0.0",
+    "tape": "^4.0.0"
   },
   "scripts": {
     "docs": "./node_modules/jsdoc/jsdoc.js ./lib/*.js",
-    "nocov": "./node_modules/lab/bin/lab",
-    "test": "./node_modules/lab/bin/lab -c -r 'console'",
-    "human": "./node_modules/lab/bin/lab -r html -o ./test/coverage.html",
-    "coverage": "./node_modules/lab/bin/lab -r lcov -o ./test/lcov.info",
+    "quick": "./node_modules/tape/bin/tape ./test/*.js",
+    "test": "./node_modules/.bin/istanbul cover ./node_modules/tape/bin/tape ./test/*.js",
+    "coverage": "./node_modules/.bin/istanbul cover ./node_modules/tape/bin/tape ./test/*.js && ./node_modules/.bin/istanbul check-coverage --statements 100 --functions 100 --lines 100 --branches 100",
+    "jshint": "./node_modules/jshint/bin/jshint -c .jshintrc --exclude-path .gitignore .",
     "codeclimate": "CODECLIMATE_REPO_TOKEN=c1fd44b286100ffb10e243fd0a8efb7421adbfa77bb0198c8fce92e0baeb55bf ./node_modules/codeclimate-test-reporter/bin/codeclimate.js < ./test/lcov.info",
     "open-coverage": "open ./test/coverage.html",
-    "jshint": "jshint -c .jshintrc --exclude-path .gitignore .",
-    "start": "./node_modules/.bin/nodemon ./server.js"
+        "spec": "node ./node_modules/tape/bin/tape ./test/*.js | node_modules/tap-spec/bin/cmd.js",
+    "start": "PORT=8000 ./node_modules/.bin/nodemon ./server.js"
   },
   "pre-commit": [
     "jshint",
