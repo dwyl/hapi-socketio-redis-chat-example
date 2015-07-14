@@ -55,20 +55,20 @@ test(file +" Socket.io Tests", function(t) {
             client.emit('io:message', message);
             setTimeout(function() {
               client.disconnect();
-              server.close();
+              // server.close();
               require('../lib/load_messages').redisClient.end();
-              chat.sub.unsubscribe();   // unsubscribe (duh!)
-              chat.sub.end();           // end subscriber connection
-              chat.pub.end();           // ensure redis publisher connnection closed! - \\
+              // chat.sub.unsubscribe();   // unsubscribe (duh!)
+              // chat.sub.end();           // end subscriber connection
+              // chat.pub.end();           // ensure redis publisher connnection closed! - \\
 
-              t.ok(chat.sub.connected === false, "✓ Cleanup Complete");
+              // t.ok(chat.sub.connected === false, "✓ Cleanup Complete");
               console.log('\n');
 
               setTimeout(function(){
-                // terminate(childproc, function(){
+                terminate(childproc, function(){
                   console.log('done');
                   t.end()
-                // })
+                })
               }, 200);
 
               // t.end();
