@@ -1,5 +1,11 @@
 # Hapi.js Socket.io Redis Chat Example
 
+[![Build Status](https://travis-ci.org/dwyl/hapi-socketio-redis-chat-example.svg)](https://travis-ci.org/dwyl/hapi-socketio-redis-chat-example)
+[![Test Coverage](https://codeclimate.com/github/dwyl/hapi-socketio-redis-chat-example/badges/coverage.svg)](https://codeclimate.com/github/dwyl/hapi-socketio-redis-chat-example/coverage)
+[![Code Climate](https://codeclimate.com/github/dwyl/hapi-socketio-redis-chat-example/badges/gpa.svg)](https://codeclimate.com/github/dwyl/hapi-socketio-redis-chat-example)
+[![Dependency Status](https://david-dm.org/dwyl/hapi-socketio-redis-chat-example.svg)](https://david-dm.org/dwyl/hapi-socketio-redis-chat-example)
+[![devDependency Status](https://david-dm.org/dwyl/hapi-socketio-redis-chat-example/dev-status.svg)](https://david-dm.org/dwyl/hapi-socketio-redis-chat-example#info=devDependencies)
+
 A basic chat application built with Hapi.js Socket.io and Redis Pub/Sub
 
 > Try it: https://hapi-chat.herokuapp.com/
