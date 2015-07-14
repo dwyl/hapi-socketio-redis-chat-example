@@ -1,16 +1,15 @@
-var test  = require('tape');
-var uncache = require('./uncache').uncache;          // http://goo.gl/JIjK9Y
-
+var test    = require('tape');
+var decache = require('decache');
 var dir     = __dirname.split('/')[__dirname.split('/').length-1];
 var file    = dir + __filename.replace(__dirname, '') + " -> ";
 
 var redis   = require('redis');
 
-// var REDISCLOUD_URL = process.env.REDISCLOUD_URL;
-uncache('../lib/redis_config.js');
-console.log('- - > process.env.REDISCLOUD_URL '+ process.env.REDISCLOUD_URL);
-
 test(file +" Confirm RedisCloud is accessible GET/SET", function(t) {
+
+  // require('../lib/redis_config.js'); // require so we are sure its in the cache!
+  // decache('../lib/redis_config.js'); // delete from cache
+  console.log('- - > process.env.REDISCLOUD_URL '+ process.env.REDISCLOUD_URL);
 
   var rc  = require('../lib/redis_config.js');
   console.log(rc);
@@ -24,7 +23,9 @@ test(file +" Confirm RedisCloud is accessible GET/SET", function(t) {
     t.equal(reply.toString(), 'working', '✓ RedisCLOUD is ' +reply.toString());
     redisClient.end();   // ensure redis con closed! - \\
     t.equal(redisClient.connected, false, "✓ Connection to RedisCloud Closed");
-    uncache('../lib/redis_config.js');
+    require('../lib/redis_config.js');
+    decache('../lib/redis_config.js');
+    console.log('\n');
     t.end();
   });
 });
