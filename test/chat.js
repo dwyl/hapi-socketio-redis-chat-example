@@ -1,31 +1,25 @@
-var assert  = require('assert');                     // node.js core assertions
-var lab     = exports.lab = require('lab').script(); // exports lab for CLI run
-var uncache = require('./uncache').uncache;          // http://goo.gl/JIjK9Y
-
+var test    = require('tape');
 var dir     = __dirname.split('/')[__dirname.split('/').length-1];
 var file    = dir + __filename.replace(__dirname, '') + " -> ";
-
-// var REDISCLOUD_URL = process.env.REDISCLOUD_URL; // ensures we connect to LOCAL redis
-// var redis       = require('redis');
-// var rc          = require('../lib/redis_config.js'); // config for Cloud/Local
-// var redisClient;
-// delete process.env.REDISCLOUD_URL; // ensures we connect to LOCAL redis
-
-// var Hapi = require('hapi');
-var server = require('../server.js')
-
-var chat = require('../lib/chat');
 var ioclient = require('socket.io-client');
 
-lab.experiment('Socket.io Chat E2E Tests', { timeout: 10000 }, function () {
+var childproc = require('./childprocess'); // basic child process runner
+var CHILD;
+var terminate = require('terminate');
 
-  lab.test(file +" Socket.io Tests", function(done) {
-    var message = 'its not always rainbows and butterflies...';
-    var options = {
-      method  : "GET",
-      url     : "/"
-    };
-    server.inject(options, function () {
+test(file +" initialize chat server in child process", function(t){
+  CHILD = childproc();
+  t.end();
+})
+
+test(file +" Socket.io Tests", function(t) {
+
+  var message = 'its not always rainbows and butterflies...';
+  console.log('- - - -'+message);
+
+  setTimeout(function() {   // wait for the Child Process to initialize
+    console.log(' - - - - - - COME ON!')
+    // chat.init(server, function () {
       var ioptions = {
         transports: ['websocket'],
         'force new connection': true,
@@ -36,18 +30,18 @@ lab.experiment('Socket.io Chat E2E Tests', { timeout: 10000 }, function () {
 
       client.on('io:welcome', function(data) {
         console.log('TEST Welcome - > ', data);
-        assert(data, "✓ Welcome Received")
+        t.ok(data, "✓ Welcome Received")
       });
 
       client.on('chat:people:new', function(data) {
         console.log('TEST chat:people:new - > ', data);
-        assert.equal(data, 'Adam', "✓ name received")
+        t.equal(data, 'Adam', "✓ name received: "+data);
       });
 
       client.on("chat:messages:latest", function(data) {
         console.log("TEST chat:messages:latest - > ", data);
         var msg = JSON.parse(data);
-        assert.equal(msg.m, message, "✓ message received: " + msg.m);
+        t.equal(msg.m, message, "✓ message received: " + msg.m);
       });
 
       client.on('connect', function(data) {
@@ -55,23 +49,38 @@ lab.experiment('Socket.io Chat E2E Tests', { timeout: 10000 }, function () {
         // send a message BEFORE registering
         client.emit('io:message', message);
 
-        setTimeout(function() { // wait 500ms and then register
+        setTimeout(function() {
           client.emit('io:name', 'Adam');
           setTimeout(function(){
             client.emit('io:message', message);
             setTimeout(function() {
               client.disconnect();
-              server.stop();
-              chat.sub.unsubscribe();   // unsubscribe (duh!)
-              chat.sub.end();           // end subscriber connection
-              chat.pub.end();           // ensure redis publisher connnection closed! - \\
-              assert(chat.sub.connected === false, "✓ Cleanup Complete");
-              done();
-            },100);
-          },200);
-        }, 300);
-      });
-    }); // end server.start
-  });
+              // server.close();
+              require('../lib/load_messages').redisClient.end();
+              // chat.sub.unsubscribe();   // unsubscribe (duh!)
+              // chat.sub.end();           // end subscriber connection
+              // chat.pub.end();           // ensure redis publisher connnection closed! - \\
 
-}); // end lab.experiment
+              // t.ok(chat.sub.connected === false, "✓ Cleanup Complete");
+              console.log('\n');
+
+              setTimeout(function(){
+                terminate(childproc, function(){
+                  console.log('done');
+                  t.end()
+                })
+              }, 200);
+
+              // t.end();
+            },200);
+          },300);
+        }, 400);
+      });
+    // }); // end chat.init
+  },300);
+});
+//
+// test(file + " Shut Down (terminate) test-chat-server.js child process", function(t){
+//
+//
+// });

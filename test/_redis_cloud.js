@@ -1,35 +1,31 @@
-var assert  = require('assert');                     // node.js core assertions
-var lab     = exports.lab = require('lab').script(); // exports lab for CLI run
-var uncache = require('./uncache').uncache;          // http://goo.gl/JIjK9Y
-
+var test    = require('tape');
+var decache = require('decache');
 var dir     = __dirname.split('/')[__dirname.split('/').length-1];
 var file    = dir + __filename.replace(__dirname, '') + " -> ";
 
 var redis   = require('redis');
 
-lab.experiment('RedisCloud Connection Check', { timeout: 10000 }, function () {
+test(file +" Confirm RedisCloud is accessible GET/SET", function(t) {
 
-  // var REDISCLOUD_URL = process.env.REDISCLOUD_URL;
-  uncache('../lib/redis_config.js');
+  // require('../lib/redis_config.js'); // require so we are sure its in the cache!
+  // decache('../lib/redis_config.js'); // delete from cache
   console.log('- - > process.env.REDISCLOUD_URL '+ process.env.REDISCLOUD_URL);
 
-  lab.test(file +" Confirm RedisCloud is accessible GET/SET", function(done) {
+  var rc  = require('../lib/redis_config.js');
+  console.log(rc);
+  var redisClient = redis.createClient(rc.port, rc.host, {no_ready_check: true});
+  redisClient.auth(rc.auth);
 
-    var rc  = require('../lib/redis_config.js');
-    console.log(rc);
-    var redisClient = redis.createClient(rc.port, rc.host, {no_ready_check: true});
-    redisClient.auth(rc.auth);
-
-    redisClient.set('redis', 'working', redisClient.print);
-    console.log("✓ Redis Client connected to: " + redisClient.address);
-    assert(redisClient.address !== '127.0.0.1:6379', "✓ Redis Client connected to: " + redisClient.address)
-    redisClient.get('redis', function (err, reply) {
-      assert.equal(reply.toString(), 'working', '✓ RedisCLOUD is ' +reply.toString());
-      redisClient.end();   // ensure redis con closed! - \\
-      assert.equal(redisClient.connected, false, "✓ Closed");
-      uncache('../lib/redis_config.js');
-      done();
-    });
+  redisClient.set('redis', 'working', redisClient.print);
+  console.log("✓ Redis Client connected to: " + redisClient.address);
+  t.ok(redisClient.address !== '127.0.0.1:6379', "✓ Redis Client connected to: " + redisClient.address)
+  redisClient.get('redis', function (err, reply) {
+    t.equal(reply.toString(), 'working', '✓ RedisCLOUD is ' +reply.toString());
+    redisClient.end();   // ensure redis con closed! - \\
+    t.equal(redisClient.connected, false, "✓ Connection to RedisCloud Closed");
+    require('../lib/redis_config.js');
+    decache('../lib/redis_config.js');
+    console.log('\n');
+    t.end();
   });
-
 });

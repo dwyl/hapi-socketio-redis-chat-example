@@ -1,6 +1,5 @@
-var assert  = require('assert');                     // node.js core assertions
-var lab     = exports.lab = require('lab').script(); // exports lab for CLI run
-var uncache = require('./uncache').uncache;          // http://goo.gl/JIjK9Y
+var test    = require('tape');
+var decache = require('decache');
 
 var dir     = __dirname.split('/')[__dirname.split('/').length-1];
 var file    = dir + __filename.replace(__dirname, '') + ' ->';
@@ -8,37 +7,40 @@ var file    = dir + __filename.replace(__dirname, '') + ' ->';
 var server = require('../server.js');
 var chat   = require('../lib/chat.js');
 
-lab.test(file +" GET / returns status 200", function(done) {
+test(file +" GET / returns status 200", function(t) {
   var options = {
     method  : "GET",
     url     : "/"
   };
   server.inject(options, function(res) {
-    assert.equal(res.statusCode, 200, 'home page loads');
-    done();
+    t.equal(res.statusCode, 200, 'home page loads');
+    server.stop();
+    t.end();
   });
 });
 
-lab.test(file +" GET /load returns previous messages", function(done) {
+test(file +" GET /load returns previous messages", function(t) {
   var options = {
     method  : "GET",
     url     : "/load"
   };
   server.inject(options, function(res) {
-    assert.equal(res.statusCode, 200, 'previous messages received');
+    t.equal(res.statusCode, 200, 'previous messages received');
     var messages = JSON.parse(res.payload);
-    assert(messages.length > 0);
-    done();
+    // console.log(messages);
+    t.ok(messages.length > 0);
+    server.stop();
+    t.end();
   });
 });
 
-lab.test(file +" Teardown > End Redis Connection & Stop Hapi Server", function(done) {
+test(file +" Teardown > End Redis Connection & Stop Hapi Server", function(t) {
   chat.pub.end();
   chat.sub.end();
   require('../lib/load_messages').redisClient.end();
-  uncache('../lib/load_messages'); // uncache redis con  - - - - \\
-  uncache('../lib/chat');
-  assert.equal(chat.sub.connected, false);
+  decache('../lib/load_messages');
+  decache('../lib/chat');
+  t.equal(chat.sub.connected, false, "chat.sub.connected: " + chat.sub.connected + " (as expected)");
   server.stop();
-  done();
+  t.end();
 });

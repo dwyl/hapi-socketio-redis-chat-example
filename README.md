@@ -13,7 +13,7 @@ Node.js Chat Apps are practically the "Hello World" of real-time apps.
 If you Google for
 "[node.js chat example](https://www.google.pt/search?q=node.js+chat+example)"
 you will see *thousands* of results! But ... 90% of the examples use Express.js,
-95% use MongoDB to store data/messages and **100% don't have any tests**.
+95% use MongoDB to store data/messages and **100% don't have _any_ tests**.
 So, *this* example is for the the people who identify with:
 > "_We use **hapi.js** because we want our code to be **performant** and **reliable**_"
 
@@ -92,36 +92,55 @@ var chat =  [
     '{"m":"Big fan of the little notifications at the top when a person joins","t":1436273109909,"n":"iteles"}'
 ]
 ```
-We use:
-+ **m** for the key of the **message**.
-+ **n** for the **name** of the person who wrote the message
-+ **t** for the **timestamp** the message was *received* by the node server (_to avoid time-zone issues_);
+We use single letters for field keys:
++ **m** for **message**.
++ **n** for **name** of the person who wrote the message
++ **t** for **timestamp** the message was *received* by the node _server_ (_to avoid time-zone issues_);
 
-# Run it!
+# Run it! (_its easy!_)
 
 ## Locally (_on your own mahine_)
 
-Define the TCP `PORT` (_environment variable_) you want the Hapi.js + Socket.io server to listen on:
+Try running the app! (_Its as easy as 1, 2, 3!_)
+
+#### 1. Clone the Repository
+
 ```sh
-export PORT=8000
+git clone https://github.com/dwyl/hapi-socketio-redis-chat-example.git
+cd hapi-socketio-redis-chat-example
 ```
-then you can start the app with:
+
+#### 2. Install Redis (_if you don't already have it!_)
+
+If you haven't already got an instance of Redis running on your machine,
+Our Redis tutorial has instructions:
+> https://github.com/dwyl/learn-redis#installation
+
+#### 3. Install the Dependencies and Start the Server
+
+Install the dependencies and *start* the app with:
 ```sh
 npm install && npm start
 ```
 
-## Running the Tests (_Locally_)
+> Now visit: http://127.0.0.1:8000 (_in your browser_)
+
+## Running the _Tests_ (_Locally_)
 
 To successfully run the tests you need to have an environment variable for RedisCloud
-(this is because we like to know that our code works on both "local" and in a "production" enviroment...)
+(this is because we like to know that our code works on both "local" and in a "production" environment...)
 
 E.g:
 ```sh
 export REDISCLOUD_URL=redis://rediscloud:yourpassword@pub-redis-12345.eu-west-1-2.1.ec2.garantiadata.com:12345
 ```
 
+> _Given that our tests include checks for RedisCloud, you will need to have
+internet access to run them ..._
+
 ## Heroku (deploying to Heroku)
 
+Are you _new to_ deploying apps to _Heroku_? (_Message us we can talk/walk you through it..._!)
 
 
 ## Background Reading

@@ -8,7 +8,7 @@ function getName() {
     Cookies.set('name', name);
   }
   console.log('name: ', name);
-  socket.emit('name', name);
+  socket.emit('io:name', name);
   $( "#m" ).focus(); // focus cursor on the message input
   return name;
 }
@@ -32,7 +32,7 @@ function getTime(timestamp) {
  */
 function renderMessage(msg) {
   msg = JSON.parse(msg);
-  console.log(msg);
+  // console.log(msg);
   var html = "<li class='row'>";
   html += "<small class='time'>" + getTime(msg.t)  + " </small>";
   html += "<span class='name'>" + msg.n + ": </span>";
@@ -49,19 +49,20 @@ $('form').submit(function() {
     return false;
   } else {
     var msg  = $('#m').val()
-    socket.emit('message', msg);
+    socket.emit('io:message', msg);
     // console.log(msg);
     $('#m').val(''); // clear message form ready for next/new message
     return false;
   }
 });
 
-socket.on('message', function(msg) {
+socket.on('chat:messages:latest', function(msg) {
+  console.log(">> " +msg);
   renderMessage(msg);
 });
 
 
-socket.on('name', function(name) {
+socket.on('chat:people:new', function(name) {
   $('#joiners').show();
   $('#joined').text(name)
   $('#joiners').fadeOut(5000);
