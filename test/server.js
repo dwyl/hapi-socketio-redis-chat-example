@@ -1,9 +1,14 @@
 var test  = require('tape');
-var decache = require('decache');          // http://goo.gl/JIjK9Y
+var decache = require('decache');        // http://goo.gl/JIjK9Y
 var path = require('path');
 
 var dir     = __dirname.split('/')[__dirname.split('/').length-1];
 var file    = dir + __filename.replace(__dirname, '') + ' ->';
+
+delete process.env.REDISCLOUD_URL; // ensures we connect to LOCAL redis
+// require('../lib/redis_config.js'); // ensure its required before decache
+// decache('../lib/redis_config.js'); // decache
+// require('../lib/redis_config.js');
 
 var server = require('../server.js');
 var chat   = require('../lib/chat.js');
@@ -36,8 +41,8 @@ test(file +" Teardown > End Redis Connection & Stop Hapi Server", function(t) {
   chat.pub.end();
   chat.sub.end();
   require('../lib/load_messages').redisClient.end();
-  decache(path.resolve(__dirname + '../lib/load_messages')); // uncache redis con  - - - - \\
-  decache(path.resolve(__dirname + '../lib/chat'));
+  decache('../lib/load_messages'); // uncache redis con  - - - - \\
+  decache('../lib/chat');
   t.equal(chat.sub.connected, false);
   server.stop();
   t.end();

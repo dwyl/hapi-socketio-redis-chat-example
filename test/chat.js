@@ -4,6 +4,10 @@ var uncache = require('./uncache').uncache;          // http://goo.gl/JIjK9Y
 var dir     = __dirname.split('/')[__dirname.split('/').length-1];
 var file    = dir + __filename.replace(__dirname, '') + " -> ";
 
+delete process.env.REDISCLOUD_URL; // ensures we connect to LOCAL redis
+uncache('../lib/redis_config.js');
+require('../lib/redis_config.js');
+
 var server = require('../server.js');
 var chat = require('../lib/chat');
 var ioclient = require('socket.io-client');
@@ -52,6 +56,7 @@ test(file +" Socket.io Tests", function(t) {
             client.disconnect();
             server.stop();
             require('../lib/load_messages').redisClient.end();
+            console.log(chat.sub.address);
             chat.sub.unsubscribe();   // unsubscribe (duh!)
             chat.sub.end();           // end subscriber connection
             chat.pub.end();           // ensure redis publisher connnection closed! - \\

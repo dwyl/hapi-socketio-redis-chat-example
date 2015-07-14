@@ -10,7 +10,7 @@ var REDISCLOUD_URL = process.env.REDISCLOUD_URL;
 test(file +" Connect to LOCAL Redis instance and GET/SET", function(t) {
   delete process.env.REDISCLOUD_URL; // ensures we connect to LOCAL redis
   uncache('../lib/redis_config.js');
-  var rc  = require('../lib/redis_config.js');
+  var rc  = require('../lib/redis_config.js')('dev');
   var redisClient = redis.createClient(rc.port, rc.host)
   redisClient.auth(rc.auth);
   t.equal(redisClient.address, '127.0.0.1:6379', "✓ Redis Client connected to: " + redisClient.address)
