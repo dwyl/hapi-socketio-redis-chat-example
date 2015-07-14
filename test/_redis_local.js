@@ -19,6 +19,7 @@ test(file +" Connect to LOCAL Redis instance and GET/SET", function(t) {
     t.equal(reply.toString(), 'LOCAL', '✓ LOCAL Redis is ' +reply.toString());
     redisClient.end();   // ensure redis con closed! - \\
     t.equal(redisClient.connected, false,  "✓ Connection to LOCAL Closed");
+    process.env.REDISCLOUD_URL = REDISCLOUD_URL;
     t.end();
   });
 });

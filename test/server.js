@@ -1,35 +1,33 @@
-var test  = require('tape');
-var decache = require('decache');        // http://goo.gl/JIjK9Y
-var path = require('path');
+var test    = require('tape');
+var decache = require('decache'); // http://goo.gl/JIjK9Y
+var path    = require('path');
 
 var dir     = __dirname.split('/')[__dirname.split('/').length-1];
 var file    = dir + __filename.replace(__dirname, '') + ' ->';
 
-delete process.env.REDISCLOUD_URL; // ensures we connect to LOCAL redis
-// require('../lib/redis_config.js'); // ensure its required before decache
-// decache('../lib/redis_config.js'); // decache
-// require('../lib/redis_config.js');
-
 var server = require('../server.js');
 var chat   = require('../lib/chat.js');
 
-test(file +" GET / returns status 200", function(t) {
+test(file + " GET / returns status 200", function(t) {
   var options = {
     method  : "GET",
     url     : "/"
   };
-  server.inject(options, function(res) {
+  server.inject(options, function (res) {
+
     t.equal(res.statusCode, 200, 'home page loads');
     t.end();
   });
 });
 
-test(file +" GET /load returns previous messages", function(t) {
+test(file + " GET /load returns previous messages", function(t) {
   var options = {
     method  : "GET",
     url     : "/load"
   };
-  server.inject(options, function(res) {
+
+  server.inject(options, function (res) {
+
     t.equal(res.statusCode, 200, 'previous messages received');
     var messages = JSON.parse(res.payload);
     t.ok(messages.length > 0);

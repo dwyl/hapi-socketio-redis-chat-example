@@ -1,61 +1,69 @@
 var test  = require('tape');
-var uncache = require('./uncache').uncache;          // http://goo.gl/JIjK9Y
+var decache = require('decache');; // http://goo.gl/JIjK9Y
 
 var dir     = __dirname.split('/')[__dirname.split('/').length-1];
 var file    = dir + __filename.replace(__dirname, '') + " -> ";
 
-delete process.env.REDISCLOUD_URL; // ensures we connect to LOCAL redis
-uncache('../lib/redis_config.js');
-require('../lib/redis_config.js');
-
-var server = require('../server.js');
-var chat = require('../lib/chat');
+var server   = require('../server.js');
+var chat     = require('../lib/chat');
 var ioclient = require('socket.io-client');
 
-test(file +" Socket.io Tests", function(t) {
+test(file + " Socket.io Tests", function(t) {
+
   var message = 'its not always rainbows and butterflies...';
+
   var options = {
     method  : "GET",
     url     : "/"
   };
+
   server.inject(options, function () {
+
     var ioptions = {
       transports: ['websocket'],
       'force new connection': true,
       reconnect: true
-    }
-    var client = ioclient.connect('http://0.0.0.0:'+process.env.PORT, ioptions);
+    };
+
+    var client = ioclient.connect('http://0.0.0.0:' + process.env.PORT, ioptions);
     // console.log(client);
 
     client.on('io:welcome', function(data) {
+
       console.log('TEST Welcome - > ', data);
       t.ok(data, "✓ Welcome Received")
     });
 
     client.on('chat:people:new', function(data) {
+
       console.log('TEST chat:people:new - > ', data);
       t.equal(data, 'Adam', "✓ name received: "+data);
     });
 
     client.on("chat:messages:latest", function(data) {
+
       console.log("TEST chat:messages:latest - > ", data);
       var msg = JSON.parse(data);
       t.equal(msg.m, message, "✓ message received: " + msg.m);
     });
 
     client.on('connect', function(data) {
+
       console.log('TEST Chat Client CONNECTED!!')
       // send a message BEFORE registering
       client.emit('io:message', message);
 
       setTimeout(function() { // wait 500ms and then register
+
         client.emit('io:name', 'Adam');
         setTimeout(function(){
+
           client.emit('io:message', message);
           setTimeout(function() {
+
             client.disconnect();
-            server.stop();
-            require('../lib/load_messages').redisClient.end();
+            // server.stop();
+            // require('../lib/load_messages').redisClient.end();
             console.log(chat.sub.address);
             chat.sub.unsubscribe();   // unsubscribe (duh!)
             chat.sub.end();           // end subscriber connection

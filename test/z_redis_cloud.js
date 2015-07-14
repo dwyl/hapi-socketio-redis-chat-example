@@ -6,13 +6,7 @@ var file    = dir + __filename.replace(__dirname, '') + " -> ";
 
 var redis   = require('redis');
 
-// var REDISCLOUD_URL = process.env.REDISCLOUD_URL;
-require('../lib/redis_config.js');
-decache('../lib/redis_config.js');
-console.log('BESART! - - > process.env.REDISCLOUD_URL '+ process.env.REDISCLOUD_URL);
-
-
-test(file +" Confirm RedisCloud is accessible GET/SET", function(t) {
+test(file + " Confirm RedisCloud is accessible GET/SET", function(t) {
 
   var rc  = require('../lib/redis_config.js')('prod');
   console.log('Redis config: ', rc);
@@ -23,10 +17,10 @@ test(file +" Confirm RedisCloud is accessible GET/SET", function(t) {
   console.log("✓ Redis Client connected to: " + redisClient.address);
   t.ok(redisClient.address !== '127.0.0.1:6379', ">>>>> Redis Client connected to: " + redisClient.address)
   redisClient.get('redis', function (err, reply) {
-    t.equal(reply.toString(), 'working', '✓ RedisCLOUD is ' +reply.toString());
+    t.equal(reply.toString(), 'working', '✓ RedisCLOUD is ' + reply.toString());
     redisClient.end();   // ensure redis con closed! - \\
     t.equal(redisClient.connected, false, "✓ Connection to RedisCloud Closed");
-    decache('../lib/redis_config.js');
     t.end();
+      // process.exit(0);
   });
 });
