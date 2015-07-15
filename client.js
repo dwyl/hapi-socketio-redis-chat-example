@@ -43,14 +43,20 @@ $( document ).ready(function() {
     return;
   }
 
+  function sanitise(txt) {
+    if(txt.indexOf("<") > -1 || txt.indexOf(">") > -1) {
+      txt = 'tries to inject : ' +  txt.replace(/</g, "&lt").replace(/>/g, "&gt");
+    }
+    return txt;
+  }
 
   $('form').submit(function() {
     if(!Cookies.get('name') || Cookies.get('name').length < 1 || Cookies.get('name') === null) {
       getName();
       return false;
     } else {
-      var msg  = $('#m').val()
-      socket.emit('io:message', msg);
+      var msg  = $('#m').val();
+      socket.emit('io:message', sanitise(msg));
       // console.log(msg);
       $('#m').val(''); // clear message form ready for next/new message
       return false;
