@@ -10,8 +10,7 @@ A basic chat application built with Hapi.js Socket.io and Redis Pub/Sub
 
 > Try it: https://hapi-chat.herokuapp.com/
 
-![hapi-chat-demo](https://cdn.rawgit.com/nelsonic/nelsonic.github.io/master/img/hapi-chat-full-res.gif)
-(_click on the image for full-screen version - this mini one looks pixelated ...!_)
+![hapi-chat-screenshot](http://i.imgur.com/jVZ1Xwi.png)
 
 ## Why?
 
