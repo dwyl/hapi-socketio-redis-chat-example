@@ -33,7 +33,6 @@ $( document ).ready(function() {
    */
   function renderMessage(msg) {
     msg = JSON.parse(msg);
-    // console.log(msg);
     var html = "<li class='row'>";
     html += "<small class='time'>" + getTime(msg.t)  + " </small>";
     html += "<span class='name'>" + msg.n + ": </span>";
@@ -57,17 +56,26 @@ $( document ).ready(function() {
     } else {
       var msg  = $('#m').val();
       socket.emit('io:message', sanitise(msg));
-      // console.log(msg);
       $('#m').val(''); // clear message form ready for next/new message
       return false;
     }
   });
 
+  // keeps latest message at the bottom of the screen
+  // http://stackoverflow.com/a/11910887/2870306
+  function scrollToBottom () {
+    $(window).scrollTop($('#messages').height());
+  }
+  
+  window.onresize = function(){
+    scrollToBottom();
+  }
+
   socket.on('chat:messages:latest', function(msg) {
     console.log(">> " +msg);
     renderMessage(msg);
+    scrollToBottom();
   });
-
 
   socket.on('chat:people:new', function(name) {
     $('#joiners').show();
@@ -83,8 +91,8 @@ $( document ).ready(function() {
       data.map(function(msg){
         renderMessage(msg);
       })
+        scrollToBottom();
     })
   }
   loadMessages();
-
 });
