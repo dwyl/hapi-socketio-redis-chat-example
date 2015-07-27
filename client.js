@@ -66,6 +66,10 @@ $( document ).ready(function() {
   function scrollToBottom () {
     $(window).scrollTop($('#messages').height());
   }
+  
+  window.onresize = function(){
+    scrollToBottom();
+  }
 
   socket.on('chat:messages:latest', function(msg) {
     console.log(">> " +msg);
