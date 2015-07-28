@@ -39,7 +39,7 @@ a [***Horizontally Scalable***](http://stackoverflow.com/questions/11707879/diff
 We are using the following components to build our chat app:
 
 1. **Hapi.js** (node.js web framework) - If you haven't used Hapi.js before, checkout our introductory tutorial: https://github.com/nelsonic/learn-hapi
-+ **Socket.io** (WebSockets with fallback for older clients) - If you're new to Soecket.io see: http://socket.io/get-started/chat/
++ **Socket.io** (WebSockets with fallback for older clients) - If you're new to Socket.io see: http://socket.io/get-started/chat/
 + **Redis** (high performance message storage and publish/subscribe) - If you or anyone on your team are *completely* new to Redis, check out: https://github.com/dwyl/learn-redis
 
 ### Why Redis?
@@ -157,6 +157,6 @@ http://matt-harrison.com/using-hapi-js-with-socket-io
 http://stackoverflow.com/questions/11707879/difference-between-scaling-horizontally-and-vertically-for-databases
 + Using Pub/Sub for Asynchronous Communication:
 http://www.rediscookbook.org/pubsub_for_asynchronous_communication.html
-+ How to use redis PUBLISH/SUBSCRIBE with nodejs to notify clients when data values change? http://stackoverflow.com/questions/4441798/how-to-use-redis-publish-subscribe-with-nodejs-to-notify-clients-when-data-value (_don't you **love** it when someone else has aready asked/answered your questions...?)
++ How to use Redis PUBLISH/SUBSCRIBE with Node.js to notify clients when data values change? http://stackoverflow.com/questions/4441798/how-to-use-redis-publish-subscribe-with-nodejs-to-notify-clients-when-data-value (_don't you **love** it when someone else has aready asked/answered your questions...?)
 + node_redis pub/sub example: https://github.com/mranney/node_redis/blob/master/examples/pub_sub.js
 + Redis PubSub example using express (_no tests_!): https://github.com/rajaraodv/redispubsub
