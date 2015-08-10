@@ -8,7 +8,6 @@ $( document ).ready(function() {
       name = window.prompt("What is your name/handle?");
       Cookies.set('name', name);
     }
-    console.log('name: ', name);
     socket.emit('io:name', name);
     $( "#m" ).focus(); // focus cursor on the message input
     return name;
@@ -50,7 +49,7 @@ $( document ).ready(function() {
   }
 
   $('form').submit(function() {
-    if(!Cookies.get('name') || Cookies.get('name').length < 1 || Cookies.get('name') === null) {
+    if(!Cookies.get('name') || Cookies.get('name').length < 1 || Cookies.get('name') === 'null') {
       getName();
       return false;
     } else {
@@ -66,7 +65,7 @@ $( document ).ready(function() {
   function scrollToBottom () {
     $(window).scrollTop($('#messages').height());
   }
-  
+
   window.onresize = function(){
     scrollToBottom();
   }
