@@ -6,7 +6,7 @@
 [![Dependency Status](https://david-dm.org/dwyl/hapi-socketio-redis-chat-example.svg)](https://david-dm.org/dwyl/hapi-socketio-redis-chat-example)
 [![devDependency Status](https://david-dm.org/dwyl/hapi-socketio-redis-chat-example/dev-status.svg)](https://david-dm.org/dwyl/hapi-socketio-redis-chat-example#info=devDependencies)
 
-A basic chat application built with Hapi.js Socket.io and Redis Pub/Sub
+A basic chat application built with Hapi.js Socket.io and Redis Publish/Subscribe
 
 > Try it: https://hapi-chat.herokuapp.com/
 
