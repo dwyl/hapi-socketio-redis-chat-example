@@ -4,7 +4,7 @@ $( document ).ready(function() {
   function getName() {
     // prompt for person's name before allowing to post
     var name = Cookies.get('name');
-    if(!name) {
+    if(!name || name === 'null') {
       name = window.prompt("What is your name/handle?");
       Cookies.set('name', name);
     }

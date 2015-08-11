@@ -71,7 +71,7 @@ Given the simplicity of the UI, the chat app is mobile-first by default.
 
 We use cookies to store the person's name on the client. If the person
 clears cookies (_or uses private browsing / incognito mode_) they will be asked
-for their name each time they open the chat window. (_this is pretty standard_)
+for their name each time they open the chat window. (_this is pretty standard_).
 
 ####  How Many Recent Messages Should we Cache?
 
@@ -102,9 +102,9 @@ We use single letters for field keys:
 + **n** for **name** of the person who wrote the message
 + **t** for **timestamp** the message was *received* by the node _server_ (_to avoid time-zone issues_);
 
-# Run it! (_its easy!_)
+# Run it! (_it's easy!_)
 
-## Locally (_on your own mahine_)
+## Locally (_on your own machine_)
 
 Try running the app! (_Its as easy as 1, 2, 3!_)
 
