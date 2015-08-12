@@ -51,8 +51,11 @@ $( document ).ready(function() {
   $('form').submit(function() {
     
     //if input is empty do not send message
-    if($('#m').val() === "") { return false; }
-
+    if($('#m').val() === "") { 
+      $('#m').attr('placeholder', 'please enter your message here');
+      return false; 
+    }
+    
     if(!Cookies.get('name') || Cookies.get('name').length < 1 || Cookies.get('name') === 'null') {
       getName();
       return false;
@@ -60,6 +63,7 @@ $( document ).ready(function() {
       var msg  = $('#m').val();
       socket.emit('io:message', sanitise(msg));
       $('#m').val(''); // clear message form ready for next/new message
+      $('#m').attr('placeholder', ''); //clears placeholder once a msg is successfully sent
       return false;
     }
   });
