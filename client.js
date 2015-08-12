@@ -50,8 +50,8 @@ $( document ).ready(function() {
 
   $('form').submit(function() {
     
-    //if input is empty do not send message
-    if($('#m').val() === "") { 
+    //if input is empty or white space do not send message
+    if($('#m').val().match(/^[\s]*$/) !== null) { 
       $('#m').attr('placeholder', 'please enter your message here');
       return false; 
     }
