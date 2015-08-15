@@ -10,7 +10,8 @@ var ioclient = require('socket.io-client');
 
 test(file + " Socket.io Tests", function(t) {
 
-  var message = 'its not always rainbows and butterflies...';
+  var message = 'its not <b>always</b> rainbows and butterflies...';
+  var messageSanitised = message.replace(/</g, "&lt").replace(/>/g, "&gt")
 
   var options = {
     method  : "GET",
@@ -44,7 +45,7 @@ test(file + " Socket.io Tests", function(t) {
 
       console.log("TEST chat:messages:latest - > ", data);
       var msg = JSON.parse(data);
-      t.equal(msg.m, message, "✓ message received: " + msg.m);
+      t.equal(msg.m, messageSanitised, "✓ message received: " + msg.m);
     });
 
     client.on('connect', function(data) {
