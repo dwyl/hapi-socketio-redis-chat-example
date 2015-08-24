@@ -29,7 +29,6 @@
   "dependencies": {
     "hapi": "^9.0.3",
     "hiredis": "^0.4.1",
-    "inert": "^3.0.1",
     "redis": "^0.12.1",
     "socket.io": "^1.3.6",
     "socket.io-client": "^1.3.6"
@@ -47,13 +46,13 @@
   },
   "scripts": {
     "docs": "./node_modules/jsdoc/jsdoc.js ./lib/*.js",
-    "quick": "./node_modules/tape/bin/tape ./test/*.js",
+    "quick": "PORT=8000 ./node_modules/tape/bin/tape ./test/*.js",
     "test": "PORT=8000 ./node_modules/.bin/istanbul cover ./node_modules/tape/bin/tape ./test/*.js",
-    "coverage": "./node_modules/.bin/istanbul cover ./node_modules/tape/bin/tape ./test/*.js && ./node_modules/.bin/istanbul check-coverage --statements 100 --functions 100 --lines 100 --branches 100",
+    "coverage": "PORT=8000 ./node_modules/.bin/istanbul cover ./node_modules/tape/bin/tape ./test/*.js && ./node_modules/.bin/istanbul check-coverage --statements 100 --functions 100 --lines 100 --branches 100",
     "jshint": "./node_modules/jshint/bin/jshint -c .jshintrc --exclude-path .gitignore .",
     "codeclimate": "CODECLIMATE_REPO_TOKEN=8bdde2e5617587b59c481ef04b710d04a78a6469fcee71840d58da7a839dda6b ./node_modules/codeclimate-test-reporter/bin/codeclimate.js < ./coverage/lcov.info",
     "open-coverage": "open ./test/coverage.html",
-    "spec": "node ./node_modules/tape/bin/tape ./test/*.js | node_modules/tap-spec/bin/cmd.js",
+    "spec": "PORT=8000 node ./node_modules/tape/bin/tape ./test/*.js | node_modules/tap-spec/bin/cmd.js",
     "start": "PORT=8000 ./node_modules/.bin/nodemon ./server.js"
   },
   "pre-commit": [
