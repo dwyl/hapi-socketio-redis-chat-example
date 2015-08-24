@@ -42,6 +42,6 @@ test(file +" Teardown > End Redis Connection & Stop Hapi Server", function(t) {
   decache('../lib/load_messages'); // uncache redis con  - - - - \\
   decache('../lib/chat');
   t.equal(chat.sub.connected, false);
-  server.stop();
+  server.stop(function(){});
   t.end();
 });
