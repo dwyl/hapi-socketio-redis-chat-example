@@ -3,9 +3,6 @@ node_js:
   - 0.12
 services:
   - redis-server
-env:
-  global:
-    - secure: "MBIN/6+fLZccmsfrQUPhws4aoh01Q4HRxco3/ZuR6ljoJUYvR6OeHwcGRs5Wo1Zatz/VG4QJ3UUxBmp1OkWpoXEIdHPgKjdwHqnLhtNDFslQEp6NbupfRnLcGZICszEwaXaNEcn2HaPQ7oEJH9J7MrddloOWRpGuvMNfSLTQm+SnZf8otf3wi1mrwOUtgCjiPz3cj2IUz1N8RJV4ZAxWj+4Y4eIMbC6lc4HzSTzwBUrnl5gGJ/8V33J3pb398SwPuOITp7tHH+cZ6RHBV8vbwdfI9urlZOKO5x8Nigr/IsT88/WwBha0pmBsD6uxGp/TK7faU+JWzqYlNUnK4I/x1b8E6IiLeEX6y0jS1LFUXbDyT13niuT0XBECM75m4xpmt+0xLZs1EkpWQCDXvA9iXwrTKtoZrDGCkVU0TIYn7q6yxYVkbPLlyay6CMY36wrx+W6P890ccbzmTYKFTk4gWHIGEJOKYtm8UZbw17yC7ilaVSAT5oiji/s1d7MRdAWBN4CWt5Dla8NaKQGMinkBCpH+HX2jC+n8X1WgKak3JjgKv6SaXMNlvdnby8tArsd1OzNNNL7pHIprMcoqrcDucAtyHEB0F3dZorF4HLNGKWHDf2UNCFj8X+evw/6fbO3AcxfBfcyN8QXG0VgjjGesMi8m1pqOVNCkwwQbnh/A0As="
 before_install:
   - pip install --user codecov
 after_success:
