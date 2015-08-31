@@ -160,3 +160,5 @@ http://www.rediscookbook.org/pubsub_for_asynchronous_communication.html
 + How to use Redis PUBLISH/SUBSCRIBE with Node.js to notify clients when data values change? http://stackoverflow.com/questions/4441798/how-to-use-redis-publish-subscribe-with-nodejs-to-notify-clients-when-data-value (_don't you **love** it when someone else has aready asked/answered your questions...?)
 + node_redis pub/sub example: https://github.com/mranney/node_redis/blob/master/examples/pub_sub.js
 + Redis PubSub example using express (_no tests_!): https://github.com/rajaraodv/redispubsub
+
+[![HitCount](https://hitt.herokuapp.com/dwyl/hapi-socketio-redis-chat-example.svg)](https://github.com/dwyl/hapi-socketio-redis-chat-example)

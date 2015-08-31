@@ -3,3 +3,7 @@ node_js:
   - 0.12
 services:
   - redis-server
+before_install:
+  - pip install --user codecov
+after_success:
+  - codecov
