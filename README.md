@@ -1,7 +1,7 @@
 # Hapi.js Socket.io Redis Chat Example
 
 [![Build Status](https://travis-ci.org/dwyl/hapi-socketio-redis-chat-example.svg)](https://travis-ci.org/dwyl/hapi-socketio-redis-chat-example)
-[![Test Coverage](https://codeclimate.com/github/dwyl/hapi-socketio-redis-chat-example/badges/coverage.svg)](https://codeclimate.com/github/dwyl/hapi-socketio-redis-chat-example/coverage)
+[![Test Coverage by codecov.io ](https://codecov.io/github/dwyl/hapi-socketio-redis-chat-example/coverage.svg?branch=master)](https://codecov.io/github/dwyl/hapi-socketio-redis-chat-example?branch=master)
 [![Code Climate](https://codeclimate.com/github/dwyl/hapi-socketio-redis-chat-example/badges/gpa.svg)](https://codeclimate.com/github/dwyl/hapi-socketio-redis-chat-example)
 [![Dependency Status](https://david-dm.org/dwyl/hapi-socketio-redis-chat-example.svg)](https://david-dm.org/dwyl/hapi-socketio-redis-chat-example)
 [![devDependency Status](https://david-dm.org/dwyl/hapi-socketio-redis-chat-example/dev-status.svg)](https://david-dm.org/dwyl/hapi-socketio-redis-chat-example#info=devDependencies)

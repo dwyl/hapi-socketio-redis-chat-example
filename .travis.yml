@@ -8,10 +8,10 @@ addons:
     packages:
     - g++-4.8
 node_js:
-  - 0.12
+  - "4.2.2"
 services:
   - redis-server
 before_install:
   - pip install --user codecov
 after_success:
-  - codecov
+  - codecov --file coverage/lcov.info --disable search
