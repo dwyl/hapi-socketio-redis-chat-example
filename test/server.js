@@ -29,8 +29,8 @@ test(file + " GET /load returns previous messages", function(t) {
   server.inject(options, function (res) {
 
     t.equal(res.statusCode, 200, 'previous messages received');
-    var messages = JSON.parse(res.payload);
-    t.ok(messages.length > 0);
+    var messages = JSON.stringify(res.payload);
+    t.ok(messages.length > 0, "success!");
     t.end();
   });
 });
