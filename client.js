@@ -9,6 +9,7 @@ $( document ).ready(function() {
       Cookies.set('name', name);
     }
     socket.emit('io:name', name);
+    // socket.on('currentUsers',loadUsers(users));
     $( "#m" ).focus(); // focus cursor on the message input
     return name;
   }
@@ -41,15 +42,24 @@ $( document ).ready(function() {
     return;
   }
 
+  function renderUsers(users) {
+    console.log(users);
+    var html = "<li class='row'>";
+    html += "<span class='users'>"  + users + "</span>";
+    html += "</li>";
+    $('#users').append(html);  // append to list
+    return;
+  }
+
   $('form').submit(function() {
-    
+
     //if input is empty or white space do not send message
-    if($('#m').val().match(/^[\s]*$/) !== null) { 
+    if($('#m').val().match(/^[\s]*$/) !== null) {
       $('#m').val('');
       $('#m').attr('placeholder', 'please enter your message here');
-      return false; 
+      return false;
     }
-    
+
     if(!Cookies.get('name') || Cookies.get('name').length < 1 || Cookies.get('name') === 'null') {
       getName();
       return false;
@@ -82,6 +92,7 @@ $( document ).ready(function() {
     $('#joiners').show();
     $('#joined').text(name)
     $('#joiners').fadeOut(5000);
+    loadUsers();
   });
 
   getName();
@@ -96,4 +107,15 @@ $( document ).ready(function() {
     })
   }
   loadMessages();
+
+function loadUsers() {
+  $.get('/loadUsers', function(data){
+    $('#users').html('');
+    data.forEach(function(users){
+      renderUsers(users);
+    })
+      scrollToBottom();
+  })
+}
+
 });

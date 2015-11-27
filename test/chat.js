@@ -63,13 +63,6 @@ test(file + " Socket.io Tests", function(t) {
           setTimeout(function() {
 
             client.disconnect();
-            // server.stop();
-            // require('../lib/load_messages').redisClient.end();
-            console.log(chat.sub.address);
-            chat.sub.unsubscribe();   // unsubscribe (duh!)
-            chat.sub.end();           // end subscriber connection
-            chat.pub.end();           // ensure redis publisher connnection closed! - \\
-            t.ok(chat.sub.connected === false, "✓ Cleanup Complete");
             t.end();
           },100);
         },200);

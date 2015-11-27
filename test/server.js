@@ -35,13 +35,29 @@ test(file + " GET /load returns previous messages", function(t) {
   });
 });
 
+test(file + " GET /loadUsers returns currentUsers", function(t) {
+  var options = {
+    method  : "GET",
+    url     : "/loadUsers"
+  };
+
+  server.inject(options, function (res) {
+
+    t.equal(res.statusCode, 200, 'current users received');
+    var users = JSON.stringify(res.payload);
+    t.ok(users.length > 0, "success!");
+    t.end();
+  });
+});
+
 test(file +" Teardown > End Redis Connection & Stop Hapi Server", function(t) {
-  chat.pub.end();
-  chat.sub.end();
   require('../lib/load_messages').redisClient.end();
   decache('../lib/load_messages'); // uncache redis con  - - - - \\
   decache('../lib/chat');
-  t.equal(chat.sub.connected, false);
   server.stop(function(){});
+  chat.sub.unsubscribe();   // unsubscribe (duh!)
+  chat.sub.end();           // end subscriber connection
+  chat.pub.end();           // ensure redis publisher connnection closed! - \\
+  t.ok(chat.sub.connected === false, "✓ Cleanup Complete");
   t.end();
 });

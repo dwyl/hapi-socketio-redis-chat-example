@@ -1,5 +1,0 @@
-var redisClient = require('redis-connection')();
-
-function loadUsers(req,reply){
-
-}
