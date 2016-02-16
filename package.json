@@ -1,6 +1,6 @@
 {
   "name": "hapi-socketio-redis-chat-example",
-  "version": "4.0.1",
+  "version": "4.0.2",
   "description": "Real-time Chat in Hapi.js & Socket.io with Redis Pub/Sub Backend for Linear Scalability",
   "main": "server.js",
   "repository": {
@@ -27,11 +27,11 @@
   },
   "homepage": "https://github.com/dwyl/hapi-socketio-redis-chat-example#readme",
   "dependencies": {
-    "hapi": "^12.1.0",
+    "hapi": "^13.0.0",
     "inert": "^3.2.0",
-    "redis-connection": "^4.0.1",
-    "socket.io": "^1.3.7",
-    "socket.io-client": "^1.4.3"
+    "redis-connection": "^4.0.3",
+    "socket.io": "^1.4.5",
+    "socket.io-client": "^1.4.5"
   },
   "devDependencies": {
     "decache": "^3.0.3",
