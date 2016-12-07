@@ -18,11 +18,11 @@ Node.js Chat Apps are practically the "Hello World" of real-time apps.
 If you Google for
 "[node.js chat example](https://www.google.pt/search?q=node.js+chat+example)"
 you will see *thousands* of results! But ... 90% of the examples use Express.js,
-95% use MongoDB to store data/messages and **100% don't have _any_ tests**.
-So, *this* example is for the the people who identify with:
-> "_We use **hapi.js** because we want our code to be **performant** and **reliable**_"
+95% use MongoDB to store data/messages and **100% have _zero_ tests**.
+So, *this* example is for the the people who prefer to have examples
+that are _fully_ explained (_including **tests**_).
 
-As with *all* our examples we have a suite of tests.
+As with *all* our examples we have a _suite_ of tests.
 
 ## What?
 
