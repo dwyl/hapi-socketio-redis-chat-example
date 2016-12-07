@@ -5,12 +5,13 @@ server.connection({
 	host: '0.0.0.0',
 	port: Number(process.env.PORT)
 });
-server.register(require('inert'), function () {
+
+server.register([require('inert'), require('hapi-error')], function () {
 
 	server.route([
 	  { method: 'GET', path: '/', handler: { file: "index.html" } },
 		// switch these two routes for a /static handler?
-	  { method: 'GET', path: '/client.js', handler: { file: './client.js' } },
+	  { method: 'GET', path: '/client.js', handler: { file: './lib/client.js' } },
 	  { method: 'GET', path: '/style.css', handler: { file: './style.css' } },
 	  { method: 'GET', path: '/load',      handler: require('./lib/load_messages').load }
 	]);
@@ -23,4 +24,5 @@ server.register(require('inert'), function () {
 	});
 
 });
+
 module.exports = server;
