@@ -29,3 +29,7 @@ node_modules
 .DS_Store
 dump.rdb
 .env
+
+# Elm dependency directory
+elm-stuff
+elm/js/app.js
