@@ -28,7 +28,14 @@ server.register([require('inert'), require('hapi-error')], function() {
       method: 'GET',
       path: '/js/app.js',
       handler: {
-        file: './elm/js',
+        file: './elm/js/app.js',
+      },
+    },
+    {
+      method: 'GET',
+      path: '/css/tachyons.min.css',
+      handler: {
+        file: './elm/css/tachyons.min.css',
       },
     },
   ]);
