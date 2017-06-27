@@ -61,9 +61,9 @@ view : Model -> Html Msg
 view model =
     div [ class "helvetica" ]
         [ ul [ class "list w-100 pa0 ma0" ] (List.map parseMessage model.messages)
-        , Html.form [ class "bg-near-black w-100 fixed bottom-0" ]
-            [ input [ class " dib ba0", Html.Attributes.style [ ( "width", toString (model.windowWidth - 74) ++ "px" ) ], value model.messageInput.input, Html.Attributes.placeholder model.messageInput.placeholder, onInput UpdateInput ] []
-            , button [ class "dib ", Html.Attributes.style [ ( "width", "58px" ) ] ] [ text "Send" ]
+        , Html.form [ class "bg-near-black w-100 fixed bottom-0 pa1" ]
+            [ input [ class "fl ba0 f3 pv2 ph1", Html.Attributes.style [ ( "width", toString (model.windowWidth - 131) ++ "px" ) ], value model.messageInput.input, Html.Attributes.placeholder model.messageInput.placeholder, onInput UpdateInput ] []
+            , button [ class "fr f3 pv2 white b--solid-ns", Html.Attributes.style [ ( "width", "103px" ), ("background-color", "#4DB6AC"), ("border-color", "#4DB6AC") ] ] [ text "Send" ]
             ]
         ]
 
