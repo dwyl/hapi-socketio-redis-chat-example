@@ -3,6 +3,7 @@ module Main exposing (..)
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)
+import Task exposing (..)
 import Window exposing (..)
 
 
@@ -11,7 +12,7 @@ main =
         { init = init
         , view = view
         , update = update
-        , subscriptions = always Sub.none
+        , subscriptions = subscriptions
         }
 
 
@@ -19,6 +20,7 @@ type alias Model =
     { name : String
     , messages : List Message
     , messageInput : MessageInput
+    , windowWidth : Int
     }
 
 
@@ -37,11 +39,12 @@ type alias MessageInput =
 
 init : ( Model, Cmd Msg )
 init =
-    ( Model "" [ Message "god" "15:30:00" "it was good", Message "belezebub" "15:30:00" "the left hand path reaps dark rewards" ] (MessageInput "" ""), Cmd.none )
+    ( Model "" [ Message "god" "15:30:00" "it was good", Message "belezebub" "15:30:00" "the left hand path reaps dark rewards" ] (MessageInput "" "") 0, Task.perform Resize Window.width )
 
 
 type Msg
     = UpdateInput String
+    | Resize Int
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -50,22 +53,29 @@ update msg model =
         UpdateInput message ->
             ( { model | messageInput = MessageInput message "" }, Cmd.none )
 
+        Resize newWidth ->
+            ( { model | windowWidth = newWidth }, Cmd.none )
+
 
 view : Model -> Html Msg
 view model =
-    div [ class "helvetica"]
+    div [ class "helvetica" ]
         [ ul [ class "list w-100 pa0 ma0" ] (List.map parseMessage model.messages)
-        , Html.form [ class "bg-near-black w-100 fixed pa1 bottom-0"]
-            [ input [ class "pa2 ba0 w-90", value model.messageInput.input, Html.Attributes.placeholder model.messageInput.placeholder, onInput UpdateInput ] []
-            , div [ class "w-10 center dib"] [button [ class "pa2 center w-5"] [ text "Send" ]]
+        , Html.form [ class "bg-near-black w-100 fixed bottom-0" ]
+            [ input [ class " dib ba0", Html.Attributes.style [ ( "width", toString (model.windowWidth - 74) ++ "px" ) ], value model.messageInput.input, Html.Attributes.placeholder model.messageInput.placeholder, onInput UpdateInput ] []
+            , button [ class "dib ", Html.Attributes.style [ ( "width", "58px" ) ] ] [ text "Send" ]
             ]
         ]
 
 
 parseMessage : Message -> Html Msg
 parseMessage message =
-    li [ class "pv3 ph3 striped--light-gray"]
+    li [ class "pv3 ph3 striped--light-gray" ]
         [ span [ class "gray f5" ] [ text message.time ]
-        , span [ class "blue mh1 f5"] [ text message.author ]
-        , p [ class "mv1 f3"] [ text message.message ]
+        , span [ class "blue mh1 f5" ] [ text message.author ]
+        , p [ class "mv1 f3" ] [ text message.message ]
         ]
+
+
+subscriptions model =
+    Window.resizes (\{ height, width } -> Resize width)
