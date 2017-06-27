@@ -15,25 +15,28 @@ main =
 
 
 type alias Model =
-  { name: String
-  , messages: List Message
-  , messageInput: MessageInput
-  }
+    { name : String
+    , messages : List Message
+    , messageInput : MessageInput
+    }
+
 
 type alias Message =
-  { author: String
-  , time: String
-  , message: String
-  }
+    { author : String
+    , time : String
+    , message : String
+    }
+
 
 type alias MessageInput =
-  { input: String
-  , placeholder: String
-  }
+    { input : String
+    , placeholder : String
+    }
+
 
 init : ( Model, Cmd Msg )
 init =
-    ( Model "" [] (MessageInput "" "") , Cmd.none )
+    ( Model "" [ Message "god" "0" "it was good", Message "belezebub" "1" "the left hand path reaps dark rewards" ] (MessageInput "" ""), Cmd.none )
 
 
 type Msg
@@ -44,15 +47,24 @@ update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
         UpdateInput message ->
-            ( { model | messageInput = MessageInput message ""}, Cmd.none)
+            ( { model | messageInput = MessageInput message "" }, Cmd.none )
 
 
 view : Model -> Html Msg
 view model =
     div []
-        [ ul [] [ li [] [ text "chat messages go here" ] ]
-        , Html.form [ ]
+        [ ul [] (List.map parseMessage model.messages)
+        , Html.form []
             [ input [ value model.messageInput.input, Html.Attributes.placeholder model.messageInput.placeholder, onInput UpdateInput ] []
             , button [] [ text "Send" ]
             ]
+        ]
+
+
+parseMessage : Message -> Html Msg
+parseMessage message =
+    li []
+        [ span [] [ text message.time ]
+        , span [] [ text message.author ]
+        , p [] [ text message.message ]
         ]

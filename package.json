@@ -58,7 +58,9 @@
     "relint": "node_modules/.bin/nodemon node_modules/.bin/goodparts lib",
     "spec": "PORT=8000 node ./node_modules/tape/bin/tape ./test/*.js | node_modules/tap-spec/bin/cmd.js",
     "start": "PORT=8000 ./node_modules/.bin/nodemon ./server.js",
-    "elm": "elm-live ./elm/src/Main.elm --dir=./elm --output=./elm/js/app.js"
+    "elm": "elm-live ./elm/src/Main.elm --dir=./elm --output=./elm/js/app.js",
+    "elm-dev": "elm-live ./elm/src/Main.elm --dir=./elm --output=./elm/js/app.js --debug --open"
+
   },
   "pre-commit": [
     "lint",
