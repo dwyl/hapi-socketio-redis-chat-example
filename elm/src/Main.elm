@@ -15,31 +15,44 @@ main =
 
 
 type alias Model =
-    {}
+  { name: String
+  , messages: List Message
+  , messageInput: MessageInput
+  }
 
+type alias Message =
+  { author: String
+  , time: String
+  , message: String
+  }
+
+type alias MessageInput =
+  { input: String
+  , placeholder: String
+  }
 
 init : ( Model, Cmd Msg )
 init =
-    ( Model, Cmd.none )
+    ( Model "" [] (MessageInput "" "") , Cmd.none )
 
 
 type Msg
-    = Hello String
+    = UpdateInput String
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
-        Hello string ->
-            ( Model, Cmd.none )
+        UpdateInput message ->
+            ( { model | messageInput = MessageInput message ""}, Cmd.none)
 
 
 view : Model -> Html Msg
 view model =
     div []
         [ ul [] [ li [] [ text "chat messages go here" ] ]
-        , Html.form []
-            [ input [] []
+        , Html.form [ ]
+            [ input [ value model.messageInput.input, Html.Attributes.placeholder model.messageInput.placeholder, onInput UpdateInput ] []
             , button [] [ text "Send" ]
             ]
         ]
