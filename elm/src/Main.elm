@@ -1,12 +1,15 @@
 port module Main exposing (..)
 
+import Date exposing (..)
 import Html exposing (..)
 import Html.Attributes as HA exposing (..)
 import Html.Events exposing (..)
-import Task exposing (..)
-import Window exposing (..)
 import Json.Decode exposing (..)
 import Json.Decode.Pipeline as JPipe exposing (..)
+import Task exposing (..)
+import Time exposing (Time)
+import Window exposing (..)
+import Date.Extra exposing (..)
 
 main =
     Html.programWithFlags
@@ -28,7 +31,7 @@ type alias Model =
 
 type alias Message =
     { n : String
-    , t : Int
+    , t : Time
     , m : String
     }
 
@@ -43,10 +46,10 @@ init : Maybe String -> ( Model, Cmd Msg )
 init name =
     case name of
         Just name ->
-            ( Model name [ Message "god" 2321 "it was good", Message "" 2321 "jesus has joined the room", Message "Satan" 0000000 "Welcome to Sheol", Message "god" 2321 "it was good", Message "" 2321 "jesus has joined the room", Message "Satan" 0000000 "Welcome to Sheol" ] (MessageInput "" "") "" 0, Task.perform Resize Window.width )
+            ( Model name [ Message "god" 2321 "it was good", Message "" 2321 "jesus has joined the room", Message "Satan" 0 "Welcome to Sheol", Message "god" 2321 "it was good", Message "" 2321 "jesus has joined the room", Message "Satan" 0 "Welcome to Sheol" ] (MessageInput "" "") "" 0, Task.perform Resize Window.width )
 
         Nothing ->
-            ( Model "" [ Message "god" 2321 "it was good", Message "" 2321 "jesus has joined the room", Message "Satan" 0000000 "Welcome to Sheol" ] (MessageInput "" "") "" 0, Task.perform Resize Window.width )
+            ( Model "" [ Message "god" 2321 "it was good", Message "" 2321 "jesus has joined the room", Message "Satan" 0 "Welcome to Sheol" ] (MessageInput "" "") "" 0, Task.perform Resize Window.width )
 
 
 type Msg
@@ -78,9 +81,10 @@ update msg model =
 
         NewMessageFromPort json ->
             let
-              newMessage = Json.Decode.decodeString decodeMessage json
+                newMessage =
+                    Json.Decode.decodeString decodeMessage json
             in
-            ( { model | messages = (List.concat [model.messages, [ Result.withDefault (Message "" 0 "I am error") newMessage ]]) }, Cmd.none)
+            ( { model | messages = List.concat [ model.messages, [ Result.withDefault (Message "" 0 "I am error") newMessage ] ] }, Cmd.none )
 
 
 view : Model -> Html Msg
@@ -117,43 +121,51 @@ login model =
             ]
         ]
 
+parseTimestamp time =
+  Date.fromTime time
+  |> Date.Extra.toFormattedString "d/M/y HH:mm:ss"
 
 parseMessage : Message -> Html Msg
 parseMessage message =
+    let
+      time =
+        if message.t == 0 then
+          "Error: "
+        else
+          parseTimestamp message.t
+    in
     if message.n == "" then
-      let
-        time =
-          if message.t == 0 then
-            "Error: "
-          else
-            toString message.t
-      in
         li [ class "pv3 ph3 animation" ]
-            [ span [ class "gray f6 f5-m f4-l" ] [ text time ]
+            [ span [ class "light-silver f6 f5-m f4-l" ] [ text time ]
             , span [ class "blue mh1 f6 f5-m f4-l" ] [ text message.m ]
             ]
     else
         li [ class "pv3 ph3 bg-white" ]
-            [ span [ class "gray f6 f5-m f4-l" ] [ text (toString message.t) ]
+            [ span [ class "light-silver f6 f5-m f4-l" ] [ text time ]
             , span [ class "blue mh1 f6 f5-m f4-l" ] [ text message.n ]
             , p [ class "mv1 f5 f4-m f3-l" ] [ text message.m ]
             ]
 
+
 decodeMessage : Decoder Message
 decodeMessage =
-  decode Message
-    |> JPipe.required "n" string
-    |> JPipe.required "t" int
-    |> JPipe.required "m" string
+    decode Message
+        |> JPipe.required "n" string
+        |> JPipe.required "t" float
+        |> JPipe.required "m" string
 
 
 subscriptions model =
-    Sub.batch [
-    Window.resizes (\{ height, width } -> Resize width)
-    , message NewMessageFromPort
-    ]
+    Sub.batch
+        [ Window.resizes (\{ height, width } -> Resize width)
+        , message NewMessageFromPort
+        ]
 
 
 port setName : String -> Cmd msg
+
+
 port sendMessage : String -> Cmd msg
+
+
 port message : (String -> msg) -> Sub msg
