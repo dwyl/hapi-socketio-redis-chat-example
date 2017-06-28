@@ -12,7 +12,15 @@
     <script src="js/app.js"></script>
     <script>
     var node = document.getElementById('app');
-var app = Elm.Main.embed(node);
+    var storedName = localStorage.getItem('name');
+
+    var name = null;
+
+    var app = Elm.Main.embed(node, storedName ? storedName : null);
+
+    app.ports.setName.subscribe(function(name) {
+      localStorage.setItem('name', name);
+    });
 </script>
     <style> .h3_5 { height: 5rem; } .pb5rem { padding-bottom: 5rem} </style>
   </body>
