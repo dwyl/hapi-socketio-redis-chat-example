@@ -2,6 +2,7 @@ port module Main exposing (..)
 
 import Date exposing (..)
 import Date.Extra exposing (..)
+import Dom.Scroll exposing (..)
 import Html exposing (..)
 import Html.Attributes as HA exposing (..)
 import Html.Events exposing (..)
@@ -49,10 +50,10 @@ init : Maybe String -> ( Model, Cmd Msg )
 init name =
     case name of
         Just name ->
-            ( Model name [ Message "god" 2321 "it was good", Message "" 2321 "jesus has joined the room", Message "Satan" 0 "Welcome to Sheol", Message "god" 2321 "it was good", Message "" 2321 "jesus has joined the room", Message "Satan" 0 "Welcome to Sheol" ] (MessageInput "" "") "" 0, Cmd.batch [ Task.perform Resize Window.width, fetchMessageHistory ] )
+            ( Model name [] (MessageInput "" "") "" 0, Cmd.batch [ Task.perform Resize Window.width, fetchMessageHistory ] )
 
         Nothing ->
-            ( Model "" [ Message "god" 2321 "it was good", Message "" 2321 "jesus has joined the room", Message "Satan" 0 "Welcome to Sheol" ] (MessageInput "" "") "" 0, Cmd.batch [ Task.perform Resize Window.width, fetchMessageHistory ] )
+            ( Model "" [] (MessageInput "" "") "" 0, Cmd.batch [ Task.perform Resize Window.width, fetchMessageHistory ] )
 
 
 type Msg
@@ -66,6 +67,7 @@ type Msg
     | DisplayMessageHistory (List String)
     | GetMessageHistory
     | Fail
+    | NoOp
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -91,23 +93,26 @@ update msg model =
                 newMessage =
                     Json.Decode.decodeString decodeMessage json
             in
-            ( { model | messages = List.concat [ model.messages, [ Result.withDefault (Message "" 0 "I am error") newMessage ] ] }, Cmd.none )
+            ( { model | messages = List.concat [ model.messages, [ Result.withDefault (Message "" 0 "I am error") newMessage ] ] }, scrollToBottom )
 
         NewNameFromPort name ->
-            ( { model | messages = List.concat [ model.messages, [ Message "" -1 (name ++ " joined the room") ] ] }, Cmd.none )
+            ( { model | messages = List.concat [ model.messages, [ Message "" -1 (name ++ " joined the room") ] ] }, scrollToBottom )
 
         DisplayMessageHistory result ->
-          let
-            newMessages =
-                List.map (\message -> Result.withDefault (Message "" 0 "") (Json.Decode.decodeString decodeMessage message)) result
-          in
-            ( {model | messages = newMessages }, Cmd.none )
+            let
+                newMessages =
+                    List.map (\message -> Result.withDefault (Message "" 0 "") (Json.Decode.decodeString decodeMessage message)) result
+            in
+            ( { model | messages = newMessages }, scrollToBottom )
 
         GetMessageHistory ->
             ( model, fetchMessageHistory )
 
         Fail ->
             ( { model | name = "I AM ERROR" }, Cmd.none )
+
+        NoOp ->
+            ( model, Cmd.none )
 
 
 view : Model -> Html Msg
@@ -173,10 +178,12 @@ parseMessage message =
             ]
 
 
+fetchMessageHistory : Cmd Msg
 fetchMessageHistory =
     Task.attempt handleFetch (Http.toTask (Http.get "/load" decodeListOfMessages))
 
 
+handleFetch : Result error (List String) -> Msg
 handleFetch result =
     case result of
         Ok result ->
@@ -186,7 +193,7 @@ handleFetch result =
             Fail
 
 
--- decodeListOfMessages : Decoder (List String)
+decodeListOfMessages : Decoder (List String)
 decodeListOfMessages =
     Json.Decode.list Json.Decode.string
 
@@ -197,6 +204,11 @@ decodeMessage =
         |> JPipe.required "n" string
         |> JPipe.required "t" float
         |> JPipe.required "m" string
+
+
+scrollToBottom : Cmd Msg
+scrollToBottom =
+    Task.attempt (always NoOp) (Dom.Scroll.toBottom "container")
 
 
 subscriptions : a -> Sub Msg
