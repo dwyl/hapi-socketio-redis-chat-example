@@ -33,6 +33,13 @@ server.register([require('inert'), require('hapi-error')], function() {
     },
     {
       method: 'GET',
+      path: '/js/javascript.js',
+      handler: {
+        file: './elm/js/javascript.js',
+      },
+    },
+    {
+      method: 'GET',
       path: '/css/tachyons.min.css',
       handler: {
         file: './elm/css/tachyons.min.css',

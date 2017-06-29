@@ -1,6 +1,6 @@
 var node = document.getElementById('app');
 var storedName = localStorage.getItem('name');
-var socket = io('localhost:8000/');
+var socket = io();
 
 if (storedName) {
   socket.emit('io:name', storedName);
@@ -29,3 +29,5 @@ socket.on('chat:people:new', function(name) {
     app.ports.name.send(name);
   }
 });
+
+fetch("/load").then(res => res.json()).then(console.log)

@@ -63,7 +63,7 @@ type Msg
     | SendMessage
     | NewMessageFromPort String
     | NewNameFromPort String
-    | DisplayMessageHistory (List Message)
+    | DisplayMessageHistory (List String)
     | GetMessageHistory
     | Fail
 
@@ -97,11 +97,11 @@ update msg model =
             ( { model | messages = List.concat [ model.messages, [ Message "" -1 (name ++ " joined the room") ] ] }, Cmd.none )
 
         DisplayMessageHistory result ->
-            -- let
-            --     newMessages =
-            --         Result.withDefault [ Message "" 0 "" ] (Json.Decode.decodeString decodeListOfMessages result)
-            -- in
-            ( { model | messages = result }, Cmd.none )
+          let
+            newMessages =
+                List.map (\message -> Result.withDefault (Message "" 0 "") (Json.Decode.decodeString decodeMessage message)) result
+          in
+            ( {model | messages = newMessages }, Cmd.none )
 
         GetMessageHistory ->
             ( model, fetchMessageHistory )
@@ -174,7 +174,7 @@ parseMessage message =
 
 
 fetchMessageHistory =
-    Task.attempt handleFetch (Http.toTask (Http.get "localhost:8000/load" decodeListOfMessages))
+    Task.attempt handleFetch (Http.toTask (Http.get "/load" decodeListOfMessages))
 
 
 handleFetch result =
@@ -186,9 +186,9 @@ handleFetch result =
             Fail
 
 
-decodeListOfMessages : Decoder (List Message)
+-- decodeListOfMessages : Decoder (List String)
 decodeListOfMessages =
-    Json.Decode.list decodeMessage
+    Json.Decode.list Json.Decode.string
 
 
 decodeMessage : Decoder Message
