@@ -90,6 +90,7 @@ update msg model =
 
         NewMessageFromPort json ->
             let
+                --make what happens in newMessage into a separate function
                 newMessage =
                     Json.Decode.decodeString decodeMessage json
             in
@@ -101,6 +102,7 @@ update msg model =
         DisplayMessageHistory result ->
             let
                 newMessages =
+                    --make this map into a separate function
                     List.map (\message -> Result.withDefault (Message "" 0 "problem retrieving message") (Json.Decode.decodeString decodeMessage message)) result
             in
             ( { model | messages = newMessages }, scrollToBottom )
@@ -185,6 +187,10 @@ parseMessage message =
 fetchMessageHistory : Cmd Msg
 fetchMessageHistory =
     Task.attempt handleFetch (Http.toTask (Http.get "/load" decodeListOfMessages))
+
+
+
+--How to test this? create our own result? help wanted
 
 
 handleFetch : Result error (List String) -> Msg
