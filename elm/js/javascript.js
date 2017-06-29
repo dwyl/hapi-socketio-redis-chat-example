@@ -6,7 +6,9 @@ if (storedName) {
   socket.emit('io:name', storedName);
 }
 
-var app = Elm.Main.embed(node, storedName ? storedName : null);
+var app = Elm.Main.embed(node, storedName
+  ? storedName
+  : null);
 
 app.ports.setName.subscribe(function(name) {
   localStorage.setItem('name', name);

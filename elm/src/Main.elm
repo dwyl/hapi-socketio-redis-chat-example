@@ -5,6 +5,7 @@ import Date.Extra exposing (..)
 import Html exposing (..)
 import Html.Attributes as HA exposing (..)
 import Html.Events exposing (..)
+import Http exposing (..)
 import Json.Decode exposing (..)
 import Json.Decode.Pipeline as JPipe exposing (..)
 import Task exposing (..)
@@ -48,10 +49,10 @@ init : Maybe String -> ( Model, Cmd Msg )
 init name =
     case name of
         Just name ->
-            ( Model name [ Message "god" 2321 "it was good", Message "" 2321 "jesus has joined the room", Message "Satan" 0 "Welcome to Sheol", Message "god" 2321 "it was good", Message "" 2321 "jesus has joined the room", Message "Satan" 0 "Welcome to Sheol" ] (MessageInput "" "") "" 0, Task.perform Resize Window.width )
+            ( Model name [ Message "god" 2321 "it was good", Message "" 2321 "jesus has joined the room", Message "Satan" 0 "Welcome to Sheol", Message "god" 2321 "it was good", Message "" 2321 "jesus has joined the room", Message "Satan" 0 "Welcome to Sheol" ] (MessageInput "" "") "" 0, Cmd.batch [ Task.perform Resize Window.width, fetchMessageHistory ] )
 
         Nothing ->
-            ( Model "" [ Message "god" 2321 "it was good", Message "" 2321 "jesus has joined the room", Message "Satan" 0 "Welcome to Sheol" ] (MessageInput "" "") "" 0, Task.perform Resize Window.width )
+            ( Model "" [ Message "god" 2321 "it was good", Message "" 2321 "jesus has joined the room", Message "Satan" 0 "Welcome to Sheol" ] (MessageInput "" "") "" 0, Cmd.batch [ Task.perform Resize Window.width, fetchMessageHistory ] )
 
 
 type Msg
@@ -62,6 +63,9 @@ type Msg
     | SendMessage
     | NewMessageFromPort String
     | NewNameFromPort String
+    | DisplayMessageHistory (List Message)
+    | GetMessageHistory
+    | Fail
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -91,6 +95,19 @@ update msg model =
 
         NewNameFromPort name ->
             ( { model | messages = List.concat [ model.messages, [ Message "" -1 (name ++ " joined the room") ] ] }, Cmd.none )
+
+        DisplayMessageHistory result ->
+            -- let
+            --     newMessages =
+            --         Result.withDefault [ Message "" 0 "" ] (Json.Decode.decodeString decodeListOfMessages result)
+            -- in
+            ( { model | messages = result }, Cmd.none )
+
+        GetMessageHistory ->
+            ( model, fetchMessageHistory )
+
+        Fail ->
+            ( { model | name = "I AM ERROR" }, Cmd.none )
 
 
 view : Model -> Html Msg
@@ -154,6 +171,24 @@ parseMessage message =
             , span [ class "blue mh1 f6 f5-m f4-l" ] [ text message.n ]
             , p [ class "mv1 f5 f4-m f3-l" ] [ text message.m ]
             ]
+
+
+fetchMessageHistory =
+    Task.attempt handleFetch (Http.toTask (Http.get "localhost:8000/load" decodeListOfMessages))
+
+
+handleFetch result =
+    case result of
+        Ok result ->
+            DisplayMessageHistory result
+
+        Err _ ->
+            Fail
+
+
+decodeListOfMessages : Decoder (List Message)
+decodeListOfMessages =
+    Json.Decode.list decodeMessage
 
 
 decodeMessage : Decoder Message
