@@ -92,24 +92,14 @@ update msg model =
         InvalidMessage ->
             ( { model | messageInput = MessageInput "" "Please enter your message here" }, Cmd.none )
 
-        NewMessageFromPort json ->
-            let
-                --make what happens in newMessage into a separate function
-                newMessage =
-                    Json.Decode.decodeString decodeMessage json
-            in
-            ( { model | messages = List.concat [ model.messages, [ Result.withDefault (Message "" 0 "I am error") newMessage ] ] }, scrollToBottom )
+        NewMessageFromPort messageJson ->
+            ( { model | messages = List.concat [ model.messages, [ parseMessageJson messageJson ] ] }, scrollToBottom )
 
         NewNameFromPort name ->
             ( { model | messages = List.concat [ model.messages, [ Message "" -1 (name ++ " joined the room") ] ] }, scrollToBottom )
 
-        DisplayMessageHistory result ->
-            let
-                newMessages =
-                    --make this map into a separate function
-                    List.map (\message -> Result.withDefault (Message "" 0 "problem retrieving message") (Json.Decode.decodeString decodeMessage message)) result
-            in
-            ( { model | messages = newMessages }, scrollToBottom )
+        DisplayMessageHistory messageListJson ->
+            ( { model | messages = parseMessageListJson messageListJson }, scrollToBottom )
 
         GetMessageHistory ->
             ( model, fetchMessageHistory )
@@ -220,6 +210,24 @@ handleFetch result =
 decodeListOfMessages : Decoder (List String)
 decodeListOfMessages =
     Json.Decode.list Json.Decode.string
+
+
+parseMessageListJson : List String -> List Message
+parseMessageListJson json =
+    let
+        default =
+            Message "" 0 "problem retrieving message"
+
+        decode =
+            Json.Decode.decodeString decodeMessage
+    in
+    List.map (\message -> Result.withDefault default (decode message)) json
+
+
+parseMessageJson : String -> Message
+parseMessageJson json =
+    Json.Decode.decodeString decodeMessage json
+        |> Result.withDefault (Message "" 0 "unable to parse message")
 
 
 decodeMessage : Decoder Message
