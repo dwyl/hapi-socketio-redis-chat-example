@@ -101,7 +101,7 @@ update msg model =
         DisplayMessageHistory result ->
             let
                 newMessages =
-                    List.map (\message -> Result.withDefault (Message "" 0 "") (Json.Decode.decodeString decodeMessage message)) result
+                    List.map (\message -> Result.withDefault (Message "" 0 "problem retrieving message") (Json.Decode.decodeString decodeMessage message)) result
             in
             ( { model | messages = newMessages }, scrollToBottom )
 
@@ -165,7 +165,11 @@ parseMessage message =
             else
                 parseTimestamp message.t
     in
-    if message.n == "" then
+    if message.t == -1 then
+        li [ class "pv3 ph3 animation" ]
+            [ span [ class "blue mh1 f6 f5-m f4-l" ] [ text message.m ]
+            ]
+    else if message.n == "" then
         li [ class "pv3 ph3 animation" ]
             [ span [ class "light-silver f6 f5-m f4-l" ] [ text time ]
             , span [ class "blue mh1 f6 f5-m f4-l" ] [ text message.m ]

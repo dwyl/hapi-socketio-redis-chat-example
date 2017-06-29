@@ -27,6 +27,7 @@
   },
   "homepage": "https://github.com/dwyl/hapi-socketio-redis-chat-example#readme",
   "dependencies": {
+    "elm-test": "^0.18.6",
     "hapi": "^16.1.1",
     "hapi-error": "^1.7.0",
     "inert": "^4.2.0",
@@ -59,7 +60,8 @@
     "spec": "PORT=8000 node ./node_modules/tape/bin/tape ./test/*.js | node_modules/tap-spec/bin/cmd.js",
     "start": "elm-make ./elm/src/Main.elm --output=./elm/js/app.js && PORT=8000 ./node_modules/.bin/nodemon ./server.js",
     "elm": "elm-live ./elm/src/Main.elm --dir=./elm --output=./elm/js/app.js --port=4000",
-    "elm-dev": "elm-live ./elm/src/Main.elm --dir=./elm --output=./elm/js/app.js --debug --open --port=4000"
+    "elm-dev": "elm-live ./elm/src/Main.elm --dir=./elm --output=./elm/js/app.js --debug --open --port=4000",
+    "test-elm": "elm-test"
   },
   "pre-commit": [
     "lint",
