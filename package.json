@@ -60,7 +60,6 @@
     "start": "PORT=8000 ./node_modules/.bin/nodemon ./server.js",
     "elm": "elm-live ./elm/src/Main.elm --dir=./elm --output=./elm/js/app.js --port=4000",
     "elm-dev": "elm-live ./elm/src/Main.elm --dir=./elm --output=./elm/js/app.js --debug --open --port=4000"
-
   },
   "pre-commit": [
     "lint",

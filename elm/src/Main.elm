@@ -1,6 +1,7 @@
 port module Main exposing (..)
 
 import Date exposing (..)
+import Date.Extra exposing (..)
 import Html exposing (..)
 import Html.Attributes as HA exposing (..)
 import Html.Events exposing (..)
@@ -9,8 +10,9 @@ import Json.Decode.Pipeline as JPipe exposing (..)
 import Task exposing (..)
 import Time exposing (Time)
 import Window exposing (..)
-import Date.Extra exposing (..)
 
+
+main : Program (Maybe String) Model Msg
 main =
     Html.programWithFlags
         { init = init
@@ -88,7 +90,7 @@ update msg model =
             ( { model | messages = List.concat [ model.messages, [ Result.withDefault (Message "" 0 "I am error") newMessage ] ] }, Cmd.none )
 
         NewNameFromPort name ->
-            ( { model | messages = List.concat [ model.messages, [ Message "" -1 (name ++ " joined the room") ] ] }, Cmd.none)
+            ( { model | messages = List.concat [ model.messages, [ Message "" -1 (name ++ " joined the room") ] ] }, Cmd.none )
 
 
 view : Model -> Html Msg
@@ -125,18 +127,21 @@ login model =
             ]
         ]
 
+
+parseTimestamp : Time -> String
 parseTimestamp time =
-  Date.fromTime time
-  |> Date.Extra.toFormattedString "d/M/y HH:mm:ss"
+    Date.fromTime time
+        |> Date.Extra.toFormattedString "d/M/y HH:mm"
+
 
 parseMessage : Message -> Html Msg
 parseMessage message =
     let
-      time =
-        if message.t == 0 then
-          "Error: "
-        else
-          parseTimestamp message.t
+        time =
+            if message.t == 0 then
+                "Error: "
+            else
+                parseTimestamp message.t
     in
     if message.n == "" then
         li [ class "pv3 ph3 animation" ]
@@ -159,6 +164,7 @@ decodeMessage =
         |> JPipe.required "m" string
 
 
+subscriptions : a -> Sub Msg
 subscriptions model =
     Sub.batch
         [ Window.resizes (\{ height, width } -> Resize width)
