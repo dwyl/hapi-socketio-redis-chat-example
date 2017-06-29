@@ -22,3 +22,9 @@ app.ports.sendMessage.subscribe(function(message) {
 socket.on('chat:messages:latest', function(message) {
   app.ports.message.send(message);
 });
+
+socket.on('chat:people:new', function(name) {
+  if (typeof name === 'string') { // Only feed elm tasty strings
+    app.ports.name.send(name);
+  }
+});

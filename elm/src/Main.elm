@@ -59,6 +59,7 @@ type Msg
     | SetName
     | SendMessage
     | NewMessageFromPort String
+    | NewNameFromPort String
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -85,6 +86,9 @@ update msg model =
                     Json.Decode.decodeString decodeMessage json
             in
             ( { model | messages = List.concat [ model.messages, [ Result.withDefault (Message "" 0 "I am error") newMessage ] ] }, Cmd.none )
+
+        NewNameFromPort name ->
+            ( { model | messages = List.concat [ model.messages, [ Message "" -1 (name ++ " joined the room") ] ] }, Cmd.none)
 
 
 view : Model -> Html Msg
@@ -159,6 +163,7 @@ subscriptions model =
     Sub.batch
         [ Window.resizes (\{ height, width } -> Resize width)
         , message NewMessageFromPort
+        , name NewNameFromPort
         ]
 
 
@@ -169,3 +174,6 @@ port sendMessage : String -> Cmd msg
 
 
 port message : (String -> msg) -> Sub msg
+
+
+port name : (String -> msg) -> Sub msg
