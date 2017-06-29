@@ -62,6 +62,7 @@ type Msg
     | Resize Int
     | SetName
     | SendMessage
+    | InvalidMessage
     | NewMessageFromPort String
     | NewNameFromPort String
     | DisplayMessageHistory (List String)
@@ -87,6 +88,9 @@ update msg model =
 
         SendMessage ->
             ( { model | messageInput = MessageInput "" "" }, sendMessage model.messageInput.input )
+
+        InvalidMessage ->
+            ( { model | messageInput = MessageInput "" "Please enter your message here" }, Cmd.none )
 
         NewMessageFromPort json ->
             let
@@ -131,11 +135,21 @@ chat : Model -> Html Msg
 chat model =
     div [ class "helvetica" ]
         [ ul [ class "list w-100 pt0 pl0 pr0 pb5rem ma0" ] (List.map parseMessage model.messages)
-        , Html.form [ class "bg-near-black h3_5 w-100 bw2 fixed bottom-0 pt2", onSubmit SendMessage ]
+        , Html.form [ class "bg-near-black h3_5 w-100 bw2 fixed bottom-0 pt2", onSubmit (validateMessage model) ]
             [ input [ class "fixed bottom-1 left-1 ba0 f3 pv2 border-box", HA.style [ ( "width", toString (model.windowWidth - 148) ++ "px" ) ], HA.value model.messageInput.input, HA.placeholder model.messageInput.placeholder, onInput UpdateInput ] []
             , button [ class "fixed bottom-1 right-1 fr ba0 ph1 f3 pv2 white border-box", HA.style [ ( "width", "103px" ), ( "background-color", "#4DB6AC" ), ( "border-color", "#4DB6AC" ) ] ] [ text "Send" ]
             ]
         ]
+
+
+validateMessage : Model -> Msg
+validateMessage model =
+    case model.messageInput.input of
+        "" ->
+            InvalidMessage
+
+        _ ->
+            SendMessage
 
 
 login : Model -> Html Msg
