@@ -15,7 +15,7 @@ import Time exposing (Time)
 import Window exposing (..)
 
 
--- Maybe string because we're initialising the name from localstorage if it exists there
+-- Maybe String because the name is initialised from localstorage (if it exists)
 
 
 main : Program (Maybe String) Model Msg
@@ -26,10 +26,6 @@ main =
         , update = update
         , subscriptions = subscriptions
         }
-
-
-
--- Set up model as normal
 
 
 type alias Model =
@@ -53,7 +49,7 @@ type alias Message =
 
 
 
--- Add a placeholder to messageInput so when the user enters an empty message it can prompt them
+-- Add a placeholder to messageInput so empty message submits prompt the user
 
 
 type alias MessageInput =
@@ -132,7 +128,7 @@ update msg model =
 
 
 
--- Go to login view when there is no name in the model
+-- Only go to chat view when there is a name in the model (otherwise login view)
 
 
 view : Model -> Html Msg
@@ -196,7 +192,7 @@ chat model =
 
 
 
--- We use the t field of message (timestamp on the backend) to display both valid messages and errors:
+-- We use the t field of messages (timestamp) to parse valid messages and errors
 -- -1 equals a one line messages like 'blah user has joined the chat'
 -- 0 equals an error message e.g. 'cannot pass message'
 
@@ -249,7 +245,8 @@ validateMessage model =
 
 
 -- Add an auto-scroll to keep new messages at the bottom
--- The first argument to task.attempt is a fail action (scroll can fail because it takes an element id) so we call a no-operation msg.
+-- The first argument to task.attempt is a fail action (scroll can fail because
+-- it takes a DOM element id) so we call a no-operation msg.
 
 
 scrollToBottom : Cmd Msg
@@ -258,7 +255,8 @@ scrollToBottom =
 
 
 
--- Pretty standard http request using task.attempt and http.toTask to convert the get request to a nice elm task
+-- Pretty standard http request using task.attempt and http.toTask to convert
+-- the get request to a nice elm task
 
 
 fetchMessageHistory : Cmd Msg
@@ -324,7 +322,8 @@ decodeMessage =
 
 
 
--- Stop the values (could be any type because javascript) we get through ports from breaking Elm.
+-- Stop the values (could be any type because javascript) we get through ports
+-- from breaking Elm.
 
 
 handleMessage : Json.Encode.Value -> Msg
