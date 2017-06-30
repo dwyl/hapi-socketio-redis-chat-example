@@ -9,6 +9,7 @@ import Html.Events exposing (..)
 import Http exposing (..)
 import Json.Decode exposing (..)
 import Json.Decode.Pipeline as JPipe exposing (..)
+import Json.Encode exposing (Value)
 import Task exposing (..)
 import Time exposing (Time)
 import Window exposing (..)
@@ -68,6 +69,7 @@ type Msg
     | DisplayMessageHistory (List String)
     | GetMessageHistory
     | Fail
+    | ShowErrorMessage Message
     | NoOp
 
 
@@ -106,6 +108,9 @@ update msg model =
 
         Fail ->
             ( { model | name = "I AM ERROR" }, Cmd.none )
+
+        ShowErrorMessage message ->
+            ( { model | messages = List.concat [ model.messages, [ message ] ] }, scrollToBottom )
 
         NoOp ->
             ( model, Cmd.none )
@@ -224,6 +229,10 @@ parseMessageListJson json =
     List.map (\message -> Result.withDefault default (decode message)) json
 
 
+
+-- change to take in a maybe string
+
+
 parseMessageJson : String -> Message
 parseMessageJson json =
     Json.Decode.decodeString decodeMessage json
@@ -247,9 +256,23 @@ subscriptions : a -> Sub Msg
 subscriptions model =
     Sub.batch
         [ Window.resizes (\{ height, width } -> Resize width)
-        , message NewMessageFromPort
+        , message handleMessage --NewMessageFromPort
         , name NewNameFromPort
         ]
+
+
+handleMessage : Json.Encode.Value -> Msg
+handleMessage message =
+    let
+        result =
+            Json.Decode.decodeValue Json.Decode.string message
+    in
+    case result of
+        Ok string ->
+            NewMessageFromPort string
+
+        Err _ ->
+            ShowErrorMessage (Message "" 0 "unable to parse message")
 
 
 port setName : String -> Cmd msg
@@ -258,7 +281,7 @@ port setName : String -> Cmd msg
 port sendMessage : String -> Cmd msg
 
 
-port message : (String -> msg) -> Sub msg
+port message : (Json.Encode.Value -> msg) -> Sub msg
 
 
 port name : (String -> msg) -> Sub msg

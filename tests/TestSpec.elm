@@ -4,6 +4,7 @@ import Expect
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Json.Decode exposing (..)
+import Json.Encode exposing (..)
 import Main exposing (..)
 import Test exposing (..)
 
@@ -80,8 +81,9 @@ suite =
                     in
                     Expect.equal (Main.view model) (Main.chat model)
             ]
-        , describe "testing decodeMessage"
-            [ test "decodeMessage works with correct input" <|
+        , describe "testing parseMessageJson"
+            --parseMessageJson can only ever take a string because Elm, so we use 'handleMessage' to deal with non-string data types before they are passed to parseMessageJson
+            [ test "parseMessageJson works with correct input" <|
                 \() ->
                     let
                         undecoded =
@@ -90,16 +92,48 @@ suite =
                         decoded =
                             Main.Message "bear" 1993 "yolo"
                     in
-                    Expect.equal (Result.withDefault (Message "" 0 "") (Json.Decode.decodeString Main.decodeMessage undecoded)) decoded
-            , test "decodeMessage works with wrong types in source object" <|
+                    Expect.equal (Main.parseMessageJson undecoded) decoded
+            , test "parseMessageJson errors with wrong types in source object" <|
                 \() ->
                     let
                         undecoded =
                             "{\"m\":\"yolo\",\"n\":\"bear\",\"t\":\"1993\"}"
 
                         decoded =
-                            Main.Message "" 0 "error"
+                            Main.Message "" 0 "unable to parse message"
                     in
-                    Expect.equal (Result.withDefault (Message "" 0 "error") (Json.Decode.decodeString Main.decodeMessage undecoded)) decoded
+                    Expect.equal (Main.parseMessageJson undecoded) decoded
+            , test "parseMessageJson errors with a string (not json)" <|
+                \() ->
+                    let
+                        undecoded =
+                            "HELLO"
+
+                        decoded =
+                            Main.Message "" 0 "unable to parse message"
+                    in
+                    Expect.equal (Main.parseMessageJson undecoded) decoded
+            ]
+        , describe "tests handleMessage"
+            [ test "handleMessage works with a string (error handling is passed to parseMessageJson)" <|
+                \() ->
+                    let
+                        undecoded =
+                            Json.Encode.string "{\"m\":\"yolo\",\"n\":\"bear\",\"t\":1993}"
+
+                        decoded =
+                            "{\"m\":\"yolo\",\"n\":\"bear\",\"t\":1993}"
+                    in
+                    Expect.equal (Main.handleMessage undecoded) (NewMessageFromPort decoded)
+            , test "handleMessage errors with an int" <|
+                \() ->
+                    let
+                        undecoded =
+                            Json.Encode.int 123
+
+                        decoded =
+                            ShowErrorMessage (Message "" 0 "unable to parse message")
+                    in
+                    Expect.equal (Main.handleMessage undecoded) decoded
             ]
         ]
