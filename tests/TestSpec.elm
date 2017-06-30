@@ -136,4 +136,23 @@ suite =
                     in
                     Expect.equal (Main.handleMessage undecoded) decoded
             ]
+        , describe "tests handleName"
+            [ test "handleName works with a string" <|
+                \() ->
+                    let
+                        undecoded =
+                            Json.Encode.string "Hello"
+                    in
+                    Expect.equal (Main.handleName undecoded) (NewNameFromPort "Hello")
+            , test "handleMessage errors with an int" <|
+                \() ->
+                    let
+                        undecoded =
+                            Json.Encode.int 123
+
+                        result =
+                            ShowErrorMessage (Message "" 0 "an unknown user joined the chat")
+                    in
+                    Expect.equal (Main.handleName undecoded) result
+            ]
         ]

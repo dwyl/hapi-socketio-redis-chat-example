@@ -256,8 +256,8 @@ subscriptions : a -> Sub Msg
 subscriptions model =
     Sub.batch
         [ Window.resizes (\{ height, width } -> Resize width)
-        , message handleMessage --NewMessageFromPort
-        , name NewNameFromPort
+        , message handleMessage
+        , name handleName
         ]
 
 
@@ -275,6 +275,20 @@ handleMessage message =
             ShowErrorMessage (Message "" 0 "unable to parse message")
 
 
+handleName : Json.Encode.Value -> Msg
+handleName name =
+    let
+        result =
+            Json.Decode.decodeValue Json.Decode.string name
+    in
+    case result of
+        Ok string ->
+            NewNameFromPort string
+
+        Err _ ->
+            ShowErrorMessage (Message "" 0 "an unknown user joined the chat")
+
+
 port setName : String -> Cmd msg
 
 
@@ -284,4 +298,4 @@ port sendMessage : String -> Cmd msg
 port message : (Json.Encode.Value -> msg) -> Sub msg
 
 
-port name : (String -> msg) -> Sub msg
+port name : (Json.Encode.Value -> msg) -> Sub msg
