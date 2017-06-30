@@ -26,5 +26,3 @@ socket.on('chat:messages:latest', function(message) {
 socket.on('chat:people:new', function(name) {
   app.ports.name.send(name);
 });
-
-fetch("/load").then(res => res.json()).then(console.log)
