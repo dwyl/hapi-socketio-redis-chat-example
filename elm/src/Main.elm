@@ -15,6 +15,9 @@ import Time exposing (Time)
 import Window exposing (..)
 
 
+-- Maybe string because we're initialising the name from localstorage if it exists there
+
+
 main : Program (Maybe String) Model Msg
 main =
     Html.programWithFlags
@@ -23,6 +26,10 @@ main =
         , update = update
         , subscriptions = subscriptions
         }
+
+
+
+-- Set up model as normal
 
 
 type alias Model =
@@ -34,6 +41,10 @@ type alias Model =
     }
 
 
+
+-- Match message types to the backend
+
+
 type alias Message =
     { n : String
     , t : Time
@@ -41,10 +52,22 @@ type alias Message =
     }
 
 
+
+-- Add a placeholder to messageInput so when the user enters an empty message it can prompt them
+
+
 type alias MessageInput =
     { input : String
     , placeholder : String
     }
+
+
+
+-- Take in name from localStorage (programWithFlags) if it exists and put it in model
+-- Dispatch two commands:
+-- Initialise the message input dynamically so it scales to 100% of the screen minus
+-- the width of the button.
+-- Run an http get request to fetchMessageHistory from the server (redis)
 
 
 init : Maybe String -> ( Model, Cmd Msg )
@@ -67,8 +90,6 @@ type Msg
     | NewMessageFromPort String
     | NewNameFromPort String
     | DisplayMessageHistory (List String)
-    | GetMessageHistory
-    | Fail
     | ShowErrorMessage Message
     | NoOp
 
@@ -103,17 +124,15 @@ update msg model =
         DisplayMessageHistory messageListJson ->
             ( { model | messages = parseMessageListJson messageListJson }, scrollToBottom )
 
-        GetMessageHistory ->
-            ( model, fetchMessageHistory )
-
-        Fail ->
-            ( { model | name = "I AM ERROR" }, Cmd.none )
-
         ShowErrorMessage message ->
             ( { model | messages = List.concat [ model.messages, [ message ] ] }, scrollToBottom )
 
         NoOp ->
             ( model, Cmd.none )
+
+
+
+-- Go to login view when there is no name in the model
 
 
 view : Model -> Html Msg
@@ -126,15 +145,96 @@ view model =
             chat model
 
 
+login : Model -> Html Msg
+login model =
+    Html.form [ class "pa4 black-80", onSubmit SetName ]
+        [ div [ class "measure" ]
+            [ label [ class "f6 b db mb2", for "name" ]
+                [ text "Name" ]
+            , input
+                [ attribute "aria-describedby" "name-desc"
+                , class "input-reset ba b--black-20 pa2 mb2 db w-100"
+                , id "name"
+                , type_ "text"
+                , HA.value model.nameInput
+                , onInput UpdateNameInput
+                ]
+                []
+            , small [ class "f6 black-60 db mb2", id "name-desc" ]
+                [ text "Helper text for the form control." ]
+            ]
+        ]
+
+
 chat : Model -> Html Msg
 chat model =
     div [ class "helvetica" ]
         [ ul [ class "list w-100 pt0 pl0 pr0 pb5rem ma0" ] (List.map parseMessage model.messages)
-        , Html.form [ class "bg-near-black h3_5 w-100 bw2 fixed bottom-0 pt2", onSubmit (validateMessage model) ]
-            [ input [ class "fixed bottom-1 left-1 ba0 f3 pv2 border-box", HA.style [ ( "width", toString (model.windowWidth - 148) ++ "px" ) ], HA.value model.messageInput.input, HA.placeholder model.messageInput.placeholder, onInput UpdateInput ] []
-            , button [ class "fixed bottom-1 right-1 fr ba0 ph1 f3 pv2 white border-box", HA.style [ ( "width", "103px" ), ( "background-color", "#4DB6AC" ), ( "border-color", "#4DB6AC" ) ] ] [ text "Send" ]
+        , Html.form
+            [ class "bg-near-black h3_5 w-100 bw2 fixed bottom-0 pt2"
+            , onSubmit (validateMessage model)
+            ]
+            [ input
+                [ class "fixed bottom-1 left-1 ba0 f3 pv2 border-box"
+                , HA.style [ ( "width", toString (model.windowWidth - 148) ++ "px" ) ]
+                , HA.value model.messageInput.input
+                , HA.placeholder model.messageInput.placeholder
+                , onInput UpdateInput
+                ]
+                []
+            , button
+                [ class "fixed bottom-1 right-1 fr ba0 ph1 f3 pv2 white border-box"
+                , HA.style
+                    [ ( "width", "103px" )
+                    , ( "background-color", "#4DB6AC" )
+                    , ( "border-color", "#4DB6AC" )
+                    ]
+                ]
+                [ text "Send" ]
             ]
         ]
+
+
+
+-- We use the t field of message (timestamp on the backend) to display both valid messages and errors:
+-- -1 equals a one line messages like 'blah user has joined the chat'
+-- 0 equals an error message e.g. 'cannot pass message'
+
+
+parseMessage : Message -> Html Msg
+parseMessage message =
+    case message.t of
+        (-1) ->
+            li [ class "pv3 ph3 animation" ]
+                [ span [ class "blue mh1 f6 f5-m f4-l" ] [ text message.m ]
+                ]
+
+        0 ->
+            li [ class "pv3 ph3 animation" ]
+                [ span [ class "light-silver f6 f5-m f4-l" ] [ text "Error: " ]
+                , span [ class "blue mh1 f6 f5-m f4-l" ] [ text message.m ]
+                ]
+
+        _ ->
+            li [ class "pv3 ph3 bg-white" ]
+                [ span [ class "light-silver f6 f5-m f4-l" ] [ text (parseTimestamp message.t) ]
+                , span [ class "blue mh1 f6 f5-m f4-l" ] [ text message.n ]
+                , p [ class "mv1 f5 f4-m f3-l" ] [ text message.m ]
+                ]
+
+
+
+-- Use Date.Extra to translate the backend timestamp to a user friendly date
+
+
+parseTimestamp : Time -> String
+parseTimestamp time =
+    Date.fromTime time
+        |> Date.Extra.toFormattedString "d/M/y HH:mm"
+
+
+
+-- If message is empty, don't send and add a helpful prompt as placeholder text
 
 
 validateMessage : Model -> Msg
@@ -147,50 +247,18 @@ validateMessage model =
             SendMessage
 
 
-login : Model -> Html Msg
-login model =
-    Html.form [ class "pa4 black-80", onSubmit SetName ]
-        [ div [ class "measure" ]
-            [ label [ class "f6 b db mb2", for "name" ]
-                [ text "Name" ]
-            , input [ attribute "aria-describedby" "name-desc", class "input-reset ba b--black-20 pa2 mb2 db w-100", id "name", type_ "text", HA.value model.nameInput, onInput UpdateNameInput ]
-                []
-            , small [ class "f6 black-60 db mb2", id "name-desc" ]
-                [ text "Helper text for the form control." ]
-            ]
-        ]
+
+-- Add an auto-scroll to keep new messages at the bottom
+-- The first argument to task.attempt is a fail action (scroll can fail because it takes an element id) so we call a no-operation msg.
 
 
-parseTimestamp : Time -> String
-parseTimestamp time =
-    Date.fromTime time
-        |> Date.Extra.toFormattedString "d/M/y HH:mm"
+scrollToBottom : Cmd Msg
+scrollToBottom =
+    Task.attempt (always NoOp) (Dom.Scroll.toBottom "container")
 
 
-parseMessage : Message -> Html Msg
-parseMessage message =
-    let
-        time =
-            if message.t == 0 then
-                "Error: "
-            else
-                parseTimestamp message.t
-    in
-    if message.t == -1 then
-        li [ class "pv3 ph3 animation" ]
-            [ span [ class "blue mh1 f6 f5-m f4-l" ] [ text message.m ]
-            ]
-    else if message.n == "" then
-        li [ class "pv3 ph3 animation" ]
-            [ span [ class "light-silver f6 f5-m f4-l" ] [ text time ]
-            , span [ class "blue mh1 f6 f5-m f4-l" ] [ text message.m ]
-            ]
-    else
-        li [ class "pv3 ph3 bg-white" ]
-            [ span [ class "light-silver f6 f5-m f4-l" ] [ text time ]
-            , span [ class "blue mh1 f6 f5-m f4-l" ] [ text message.n ]
-            , p [ class "mv1 f5 f4-m f3-l" ] [ text message.m ]
-            ]
+
+-- Pretty standard http request using task.attempt and http.toTask to convert the get request to a nice elm task
 
 
 fetchMessageHistory : Cmd Msg
@@ -199,7 +267,7 @@ fetchMessageHistory =
 
 
 
---How to test this? create our own result? help wanted
+-- Handle failed get requests
 
 
 handleFetch : Result error (List String) -> Msg
@@ -209,12 +277,20 @@ handleFetch result =
             DisplayMessageHistory result
 
         Err _ ->
-            Fail
+            ShowErrorMessage (Message "" 0 "unable to fetch message history")
+
+
+
+-- Make sure the message history comes in as a list (array) of strings (json)
 
 
 decodeListOfMessages : Decoder (List String)
 decodeListOfMessages =
     Json.Decode.list Json.Decode.string
+
+
+
+-- Parse each individual message inside the message history
 
 
 parseMessageListJson : List String -> List Message
@@ -247,27 +323,13 @@ decodeMessage =
         |> JPipe.required "m" string
 
 
-scrollToBottom : Cmd Msg
-scrollToBottom =
-    Task.attempt (always NoOp) (Dom.Scroll.toBottom "container")
 
-
-subscriptions : a -> Sub Msg
-subscriptions model =
-    Sub.batch
-        [ Window.resizes (\{ height, width } -> Resize width)
-        , message handleMessage
-        , name handleName
-        ]
+-- Stop the values (could be any type because javascript) we get through ports from breaking Elm.
 
 
 handleMessage : Json.Encode.Value -> Msg
 handleMessage message =
-    let
-        result =
-            Json.Decode.decodeValue Json.Decode.string message
-    in
-    case result of
+    case Json.Decode.decodeValue Json.Decode.string message of
         Ok string ->
             NewMessageFromPort string
 
@@ -277,16 +339,27 @@ handleMessage message =
 
 handleName : Json.Encode.Value -> Msg
 handleName name =
-    let
-        result =
-            Json.Decode.decodeValue Json.Decode.string name
-    in
-    case result of
+    case Json.Decode.decodeValue Json.Decode.string name of
         Ok string ->
             NewNameFromPort string
 
         Err _ ->
             ShowErrorMessage (Message "" 0 "an unknown user joined the chat")
+
+
+
+-- Our subscriptions include:
+-- Window.resizes to keep our message input the right width even after a resize
+-- Two incoming javascript ports for new messages and new users
+
+
+subscriptions : a -> Sub Msg
+subscriptions model =
+    Sub.batch
+        [ Window.resizes (\{ height, width } -> Resize width)
+        , message handleMessage
+        , name handleName
+        ]
 
 
 port setName : String -> Cmd msg
