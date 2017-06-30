@@ -58,9 +58,8 @@
     "retest": "PORT=8000 node_modules/.bin/nodemon ./node_modules/.bin/istanbul cover ./node_modules/tape/bin/tape ./test/*.js | node_modules/tap-spec/bin/cmd.js",
     "relint": "node_modules/.bin/nodemon node_modules/.bin/goodparts lib",
     "spec": "PORT=8000 node ./node_modules/tape/bin/tape ./test/*.js | node_modules/tap-spec/bin/cmd.js",
-    "start": "elm-make ./elm/src/Main.elm --output=./elm/js/app.js && PORT=8000 ./node_modules/.bin/nodemon ./server.js",
-    "elm": "elm-live ./elm/src/Main.elm --dir=./elm --output=./elm/js/app.js --port=4000",
-    "elm-dev": "elm-live ./elm/src/Main.elm --dir=./elm --output=./elm/js/app.js --debug --open --port=4000",
+    "start": "PORT=8000 ./node_modules/.bin/nodemon ./server.js",
+    "start-elm": "elm-make ./elm/src/Main.elm --output=./elm/js/app.js && PORT=8000 ./node_modules/.bin/nodemon ./server.js",
     "test-elm": "elm-test"
   },
   "pre-commit": [
