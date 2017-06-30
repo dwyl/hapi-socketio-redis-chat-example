@@ -143,6 +143,26 @@ export REDISCLOUD_URL=redis://rediscloud:yourpassword@pub-redis-12345.eu-west-1-
 > _Given that our tests include checks for RedisCloud, you will need to have
 internet access to run them ..._
 
+## Running the `Elm` version
+At dwyl we really like [Elm](https://github.com/dwyl/learn-elm) and [Tachyons](https://github.com/dwyl/learn-tachyons) and they're part of our [core technology stack](https://github.com/dwyl/technology-stack), so as well as the standard Javascript/HTML/CSS front end we've made one in Elm so you can see what goes into a chat app in Elm as well.
+
+You'll need [Elm installed on your machine](https://guide.elm-lang.org/install.html) to run it so make sure you have that.
+
+If you've _never_ done Elm before we recommend starting with our [`learn-elm-architecture`](https://github.com/dwyl/learn-elm-architecture-in-javascript) tutorial, and then moving onto [`learn-elm`](https://github.com/dwyl/learn-elm), and once you're done with them come here and check out how the chat app works!
+
+To run the Elm version go into your terminal and run:
+```
+npm run start-elm
+```
+this script runs `elm-make` when it runs, so will prompt you to install all of the `elm-stuff` when you first run it, then go to `localhost:8000/elm` (make sure you're not running the server already!).
+
+If you're interested in the code go into `elm/src/Main.elm`, it's commented all the way through so that you can understand everything. (if anything is unclear, [let us know!](https://github.com/dwyl/hapi-socketio-redis-chat-example/issues/new)).
+
+### We also have tests!
+```
+npm run test-elm
+```
+Elm doesn't currently have a coverage tool but we try to make sure all of our logic is tested. If you haven't tested your Elm code before, [start now!](https://github.com/elm-community/elm-test)
 ## Heroku (deploying to Heroku)
 
 Are you _new to_ deploying apps to _Heroku_? (_Message us we can talk/walk you through it..._!)
