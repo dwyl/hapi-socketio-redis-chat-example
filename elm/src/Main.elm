@@ -112,16 +112,16 @@ update msg model =
             ( { model | messageInput = MessageInput "" "Please enter your message here" }, Cmd.none )
 
         NewMessageFromPort messageJson ->
-            ( { model | messages = List.concat [ model.messages, [ parseMessageJson messageJson ] ] }, scrollToBottom )
+            ( { model | messages = model.messages ++ [ parseMessageJson messageJson ] }, scrollToBottom )
 
         NewNameFromPort name ->
-            ( { model | messages = List.concat [ model.messages, [ Message "" -1 (name ++ " joined the room") ] ] }, scrollToBottom )
+            ( { model | messages = model.messages ++ [ Message "" -1 (name ++ " joined the room") ] }, scrollToBottom )
 
         DisplayMessageHistory messageListJson ->
             ( { model | messages = parseMessageListJson messageListJson }, scrollToBottom )
 
         ShowErrorMessage message ->
-            ( { model | messages = List.concat [ model.messages, [ message ] ] }, scrollToBottom )
+            ( { model | messages = model.messages ++ [ message ] }, scrollToBottom )
 
         NoOp ->
             ( model, Cmd.none )
