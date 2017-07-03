@@ -26,7 +26,8 @@ As with *all* our examples we have a _suite_ of tests.
 
 ## What?
 
-[Real-Time](https://en.wikipedia.org/wiki/Real-time_computing#Near_real-time) Chat is an _integral_ part of _any_ communications system.  
+[Real-Time](https://en.wikipedia.org/wiki/Real-time_computing#Near_real-time)
+Chat is an _integral_ part of _any_ communications system.  
 Building a (*basic*) chat system is *easy* with Socket.io.
 
 This example app shows you how to use Socket.io with Hapi.js and Redis for
@@ -38,34 +39,46 @@ a [***Horizontally Scalable***](http://stackoverflow.com/questions/11707879/diff
 
 We are using the following components to build our chat app:
 
-1. **Hapi.js** (node.js web framework) - If you haven't used Hapi.js before, checkout our introductory tutorial: https://github.com/nelsonic/learn-hapi
-+ **Socket.io** (WebSockets with fallback for older clients) - If you're new to Socket.io see: http://socket.io/get-started/chat/
-+ **Redis** (high performance message storage and publish/subscribe) - If you or anyone on your team are *completely* new to Redis, check out: https://github.com/dwyl/learn-redis
+1. **Hapi.js** (node.js web framework) - If you haven't used Hapi.js before,
+checkout our introductory tutorial: https://github.com/dwyl/learn-hapi
++ **Socket.io** (WebSockets with fallback for older clients) - If you're
+new to Socket.io see: http://socket.io/get-started/chat/
++ **Redis** (high performance message storage and publish/subscribe) - If you
+or anyone on your team are *completely* new to Redis,
+check out: https://github.com/dwyl/learn-redis
 
 ### Why Redis?
 
-Socket.io only handles distributing messages, if people disconnect from the chat they will miss any subsequent messages and when anyone connects there will see no history ... so we need a place to store messages for retrieval.
+Socket.io only handles distributing messages, if people disconnect
+from the chat they will miss any subsequent messages and
+when anyone connects there will see no history ...
+so we need a place to store messages for retrieval.
 
 Top 3 reasons why Redis is the *clear* choice for storing chat messages.
 
-1. ***Speed***  - **Redis** is _**much faster** than MongoDB, CouchDB or PostgreSQL_
+1. ***Speed***  - **Redis** is _**much faster** than MongoDB,
+CouchDB or PostgreSQL_
 2. ***Simple*** - pushing messages onto a list (set) is the _simplest
-possible_ way to store a chat history. Given that we can store up to **512Mb** *per chat* and *stream* chat *history* to new clients (*low http overhead*) its an
-*incredibly simple setup*!
-3. ***Scalable*** ***Publish/Subscribe*** ("_pattern_") means you can scale *out*
+possible_ way to store a chat history. Given that we can store up to
+**512Mb** *per chat* and *stream* chat *history* to new clients
+(*low http overhead*) its an *incredibly simple setup*!
+3. ***Scalable*** ***Publish/Subscribe*** ("_pattern_") means we can scale *out*
 (*add more node.js/socket.io servers when you need to serve more clients*)
-Redis can already handle an ***order of magnitude*** more than other NoSQL Databases,
-so your most likely "bottleneck" is node (*nuts, hey!?*)
+Redis can already handle an ***order of magnitude*** more than
+other NoSQL Databases, so your most likely "bottleneck" is node (*nuts, hey!?*)
 
 ### Publish / Subscribe ...?
 
-The Publish Subscribe "_Pattern_" is (_still_) **the simple_st_** way of scaling software applications.
-if you are new to this idea, see: https://en.wikipedia.org/wiki/Publish%E2%80%93subscribe_pattern
+The Publish Subscribe "_Pattern_" is (_still_) **the simple_st_**
+way of scaling software applications. If you are new to this idea,
+see: https://en.wikipedia.org/wiki/Publish%E2%80%93subscribe_pattern
 
 ### Mobile First
 
 Given the simplicity of the UI, the chat app is mobile-first by default.
-> _If anyone has time to **Pull Request** a few CSS media queries to make the UI **even better** on **mobile devices**, we would massively appreciate the contribution_!
+> _If anyone has time to **Pull Request** a few CSS media
+ queries to make the UI **even better** on **mobile devices**,
+ we would massively appreciate the contribution_!
 
 ### *Returning* Visitor
 
@@ -76,7 +89,10 @@ for their name each time they open the chat window. (_this is pretty standard_).
 ####  How Many Recent Messages Should we Cache?
 
 At present we are caching ***all the messages*** in Redis.
-But a less RAM-hungry way to scale the app would be to store only the 50-100 most recent chat messages in Redis (RAM) and the remaining history in a cheaper on-disk storage e.g. ElasticSearch (_which would also enable searchability_)
+But a less RAM-hungry way to scale the app would be to store only
+the 50-100 most recent chat messages in Redis (RAM) and the remaining
+history in a cheaper on-disk storage e.g. ElasticSearch
+(_which would also enable searchability_)
 
 ### Data Model
 
@@ -100,7 +116,8 @@ var chat =  [
 We use single letters for field keys:
 + **m** for **message**.
 + **n** for **name** of the person who wrote the message
-+ **t** for **timestamp** the message was *received* by the node _server_ (_to avoid time-zone issues_);
++ **t** for **timestamp** the message was *received* by the
+node _server_ (_to avoid time-zone issues_);
 
 # Run it! (_it's easy!_)
 
@@ -132,8 +149,9 @@ npm install && npm start
 
 ## Running the _Tests_ (_Locally_)
 
-To successfully run the tests you need to have an environment variable for RedisCloud
-(this is because we like to know that our code works on both "local" and in a "production" environment...)
+To successfully run the tests you need to have an environment variable
+for RedisCloud (this is because we like to know that our code works
+  on both "local" and in a "production" environment...)
 
 E.g:
 ```sh
@@ -144,28 +162,44 @@ export REDISCLOUD_URL=redis://rediscloud:yourpassword@pub-redis-12345.eu-west-1-
 internet access to run them ..._
 
 ## Running the `Elm` version
-At dwyl we really like [Elm](https://github.com/dwyl/learn-elm) and [Tachyons](https://github.com/dwyl/learn-tachyons) and they're part of our [core technology stack](https://github.com/dwyl/technology-stack), so as well as the standard Javascript/HTML/CSS front end we've made one in Elm so you can see what goes into a chat app in Elm as well.
+At dwyl we really like [Elm](https://github.com/dwyl/learn-elm) and [Tachyons](https://github.com/dwyl/learn-tachyons) and they're part of
+our [core technology stack](https://github.com/dwyl/technology-stack),
+so as well as the standard Javascript/HTML/CSS front end we've made one
+in Elm so you can see what goes into a chat app in Elm as well.
 
-You'll need [Elm installed on your machine](https://guide.elm-lang.org/install.html) to run it so make sure you have that.
+You'll need
+[Elm installed on your machine](https://guide.elm-lang.org/install.html)
+to run it so make sure you have that.
 
-If you've _never_ done Elm before we recommend starting with our [`learn-elm-architecture`](https://github.com/dwyl/learn-elm-architecture-in-javascript) tutorial, and then moving onto [`learn-elm`](https://github.com/dwyl/learn-elm), and once you're done with them come here and check out how the chat app works!
+If you've _never_ done Elm before we recommend starting with our [`learn-elm-architecture`](https://github.com/dwyl/learn-elm-architecture-in-javascript)
+tutorial, and then moving onto [`learn-elm`](https://github.com/dwyl/learn-elm),
+and once you're done with them come here and check out how the chat app works!
 
 To run the Elm version go into your terminal and run:
 ```
 npm run start-elm
 ```
-this script runs `elm-make` when it runs, so will prompt you to install all of the `elm-stuff` when you first run it, then go to `localhost:8000/elm` (make sure you're not running the server already!).
+this script runs `elm-make` when it runs, so will prompt you to install all
+of the `elm-stuff` when you first run it, then go to `localhost:8000/elm`
+(make sure you're not running the server already!).
 
-If you're interested in the code go into `elm/src/Main.elm`, it's commented all the way through so that you can understand everything. (if anything is unclear, [let us know!](https://github.com/dwyl/hapi-socketio-redis-chat-example/issues/new)).
+If you're interested in the code go into `elm/src/Main.elm`,
+it's commented all the way through so that you can understand everything.
+(if anything is unclear,
+  [let us know!](https://github.com/dwyl/hapi-socketio-redis-chat-example/issues/new))
 
 ### We also have tests!
 ```
 npm run test-elm
 ```
-Elm doesn't currently have a coverage tool but we try to make sure all of our logic is tested. If you haven't tested your Elm code before, [start now!](https://github.com/elm-community/elm-test)
+Elm doesn't currently have a coverage tool but we try to make sure all
+of our logic is tested. If you haven't tested your Elm code before,
+[start now!](https://github.com/elm-community/elm-test)
+
 ## Heroku (deploying to Heroku)
 
-Are you _new to_ deploying apps to _Heroku_? (_Message us we can talk/walk you through it..._!)
+Are you _new to_ deploying apps to _Heroku_?
+(_Message us we can talk/walk you through it..._!)
 
 
 ## Background Reading

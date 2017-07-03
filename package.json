@@ -20,7 +20,7 @@
     "subscribe",
     "scalable"
   ],
-  "author": "@nelsonic",
+  "author": "@dwyl & friends",
   "license": "GPL-2.0",
   "bugs": {
     "url": "https://github.com/dwyl/hapi-socketio-redis-chat-example/issues"
