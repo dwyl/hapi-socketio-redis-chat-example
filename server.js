@@ -38,13 +38,6 @@ server.register([require('inert'), require('hapi-error')], function() {
         file: './elm/js/javascript.js',
       },
     },
-    {
-      method: 'GET',
-      path: '/css/tachyons.min.css',
-      handler: {
-        file: './elm/css/tachyons.min.css',
-      },
-    },
   ]);
 
   server.start(function() {
