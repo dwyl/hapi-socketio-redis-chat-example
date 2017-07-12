@@ -30,9 +30,9 @@ As with *all* our examples we have a _suite_ of tests.
 Chat is an _integral_ part of _any_ communications system.  
 Building a (*basic*) chat system is *easy* with Socket.io.
 
-This example app shows you how to use Socket.io with Hapi.js and Redis for
-a [***Horizontally Scalable***](http://stackoverflow.com/questions/11707879/difference-between-scaling-horizontally-and-vertically-for-databases) chat capable of
-**_hundrededs of thousands_** of **_concurrent_ clients**.
+This example app shows you how to use Socket.io with Hapi.js and Redis for a
+[***Horizontally Scalable***](http://stackoverflow.com/questions/11707879/difference-between-scaling-horizontally-and-vertically-for-databases)
+chat capable of **_hundrededs of thousands_** of **_concurrent_ clients**.
 
 
 ## How?
@@ -162,8 +162,10 @@ export REDISCLOUD_URL=redis://rediscloud:yourpassword@pub-redis-12345.eu-west-1-
 internet access to run them ..._
 
 ## Running the `Elm` version
-At dwyl we really like [Elm](https://github.com/dwyl/learn-elm) and [Tachyons](https://github.com/dwyl/learn-tachyons) and they're part of
-our [core technology stack](https://github.com/dwyl/technology-stack),
+At dwyl we really like [Elm](https://github.com/dwyl/learn-elm)
+and [Tachyons](https://github.com/dwyl/learn-tachyons)
+and they're part of our
+[core technology stack](https://github.com/dwyl/technology-stack),
 so as well as the standard Javascript/HTML/CSS front end we've made one
 in Elm so you can see what goes into a chat app in Elm as well.
 
@@ -171,7 +173,8 @@ You'll need
 [Elm installed on your machine](https://guide.elm-lang.org/install.html)
 to run it so make sure you have that.
 
-If you've _never_ done Elm before we recommend starting with our [`learn-elm-architecture`](https://github.com/dwyl/learn-elm-architecture-in-javascript)
+If you've _never_ done Elm before we recommend starting with our
+[`learn-elm-architecture`](https://github.com/dwyl/learn-elm-architecture-in-javascript)
 tutorial, and then moving onto [`learn-elm`](https://github.com/dwyl/learn-elm),
 and once you're done with them come here and check out how the chat app works!
 
@@ -186,7 +189,7 @@ of the `elm-stuff` when you first run it, then go to `localhost:8000/elm`
 If you're interested in the code go into `elm/src/Main.elm`,
 it's commented all the way through so that you can understand everything.
 (if anything is unclear,
-  [let us know!](https://github.com/dwyl/hapi-socketio-redis-chat-example/issues/new))
+[let us know!](https://github.com/dwyl/hapi-socketio-redis-chat-example/issues/new))
 
 ### We also have tests!
 ```
