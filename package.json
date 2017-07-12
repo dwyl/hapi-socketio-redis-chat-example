@@ -20,13 +20,14 @@
     "subscribe",
     "scalable"
   ],
-  "author": "@nelsonic",
+  "author": "@dwyl & friends",
   "license": "GPL-2.0",
   "bugs": {
     "url": "https://github.com/dwyl/hapi-socketio-redis-chat-example/issues"
   },
   "homepage": "https://github.com/dwyl/hapi-socketio-redis-chat-example#readme",
   "dependencies": {
+    "elm-test": "^0.18.6",
     "hapi": "^16.1.1",
     "hapi-error": "^1.7.0",
     "inert": "^4.2.0",
@@ -57,7 +58,9 @@
     "retest": "PORT=8000 node_modules/.bin/nodemon ./node_modules/.bin/istanbul cover ./node_modules/tape/bin/tape ./test/*.js | node_modules/tap-spec/bin/cmd.js",
     "relint": "node_modules/.bin/nodemon node_modules/.bin/goodparts lib",
     "spec": "PORT=8000 node ./node_modules/tape/bin/tape ./test/*.js | node_modules/tap-spec/bin/cmd.js",
-    "start": "PORT=8000 ./node_modules/.bin/nodemon ./server.js"
+    "start": "PORT=8000 ./node_modules/.bin/nodemon ./server.js",
+    "start-elm": "elm-make ./elm/src/Main.elm --output=./elm/js/app.js && PORT=8000 ./node_modules/.bin/nodemon ./server.js",
+    "test-elm": "elm-test"
   },
   "pre-commit": [
     "lint",
