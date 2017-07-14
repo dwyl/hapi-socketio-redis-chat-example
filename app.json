@@ -1,0 +1,15 @@
+{
+    "name": "Hapi (SocketIO Redis) Chat in Elm",
+    "repository": "https://github.com/dwyl/hapi-socketio-redis-chat-example",
+    "env": {
+        "ELM_COMPILE": "elm make ./elm/src/Main.elm --output=./elm/js/app.js"
+    },
+    "buildpacks": [
+        {
+            "url": "https://github.com/srid/heroku-buildpack-elm.git"
+        },
+        {
+            "url": "https://github.com/hone/heroku-buildpack-static"
+        }
+    ]
+}
