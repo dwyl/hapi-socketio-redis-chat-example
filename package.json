@@ -59,7 +59,7 @@
     "relint": "node_modules/.bin/nodemon node_modules/.bin/goodparts lib",
     "spec": "PORT=8000 node ./node_modules/tape/bin/tape ./test/*.js | node_modules/tap-spec/bin/cmd.js",
     "local": "PORT=8000 ./node_modules/.bin/nodemon ./server.js",
-    "start": "elm-make ./elm/src/Main.elm --output=./elm/js/app.js && node ./server.js",
+    "start": "node ./server.js",
     "local-elm": "elm-make ./elm/src/Main.elm --output=./elm/js/app.js && PORT=8000 ./node_modules/.bin/nodemon ./server.js",
     "test-elm": "elm-test"
   },
